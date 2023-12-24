@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppConstant {
   static int animatedBodyMs = 500;
+  static String token='';
 }
 
 

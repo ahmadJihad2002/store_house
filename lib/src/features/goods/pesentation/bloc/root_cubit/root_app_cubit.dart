@@ -22,4 +22,7 @@ class RootAppCubit extends Cubit<RootAppStates> {
     screenIndex = index;
     emit(RootAppBottomNavAppBarChangeStates());
   }
+
+
+
 }

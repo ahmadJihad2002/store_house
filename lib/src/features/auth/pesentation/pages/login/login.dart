@@ -1,127 +1,161 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:store_house/core/services/util.dart';
-import 'package:store_house/src/features/auth/pesentation/bloc/login/cubit.dart';
+import 'package:store_house/core/utils/app_util.dart';
+import 'package:store_house/src/features/auth/pesentation/bloc/login/login_cubit.dart';
 import 'package:store_house/src/features/auth/pesentation/bloc/login/states.dart';
-import 'package:store_house/src/features/auth/pesentation/pages/login/widgets/defaultButton.dart';
+import 'package:store_house/src/features/goods/pesentation/pages/add_type/widgets/addTypeAppBar.dart';
 import 'package:store_house/src/root_app.dart';
+import 'package:store_house/src/theme/app_color.dart';
+import 'package:store_house/src/widgets/custom_button.dart';
+import 'package:store_house/src/widgets/custom_progress_indicator.dart';
+import 'package:store_house/src/widgets/custom_textfield.dart';
 
-class Login extends StatelessWidget {
-  Login({Key? key}) : super(key: key);
-  final _formKey = GlobalKey<FormState>();
-
-  TextEditingController name = TextEditingController();
-
+class LoginPage extends StatelessWidget {
+  LoginPage({Key? key}) : super(key: key);
+  TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  TextEditingController name = TextEditingController();
+  TextEditingController image = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppLoginCubit, AppLoginStates>(
-      listener: (BuildContext context, Object? state) {
-        if (state is AppLoginSuccessStates) {
-          showToast(
-            text: 'تمت التسجيل بنجاح',
-            state: ToastStates.success,
-          );
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const RootApp()));
-        }
-        if (state is AppLoginErrorStates) {
-          showToast(
-            text: state.error,
-            state: ToastStates.error,
-          );
-        }
-      },
-      builder: (BuildContext context, state) {
-        return Scaffold(
-          body: Center(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      const Text(
-                        "تسجيل الدخول",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            color: Colors.grey,
-                            fontSize: 30),
-                      ),
-                      const Text(
-                        " قم بتسجيل الدخول لتصفح المنتجات ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            color: Colors.grey,
-                            fontSize: 10),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      defaultFormField(
-                        icon: Icons.person,
-                        label: 'gmail',
-                        controller: name,
-                        inputType: TextInputType.emailAddress,
-                        validate: (value) {
-                          if (value.isEmpty) {
-                            return "قم بإدخال الاسم بالأول";
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 15),
-                      defaultFormField(
-                          validate: (value) {
-                            if (value.isEmpty) {
-                              return "قم بإدخال الاسم بالأول";
-                            }
-                          },
-                          isPassword: AppLoginCubit.get(context).isPassword,
-                          icon: Icons.lock,
-                          label: 'password',
-                          controller: password,
-                          inputType: TextInputType.visiblePassword,
-                          suffix: AppLoginCubit.get(context).suffix,
-                          suffixOnTap: () => AppLoginCubit.get(context)
-                              .changePasswordVisibility()),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      ConditionalBuilder(
-                        condition: state is! AppLoginLoadingStates,
-                        builder: (BuildContext context) {
-                          return defaultButton(
-                              function: () {
-                                if (_formKey.currentState!.validate()) {
-                                  AppLoginCubit.get(context).userLogin(
-                                      email: name.text,
-                                      password: password.text);
-                                }
-                              },
-                              text: "text");
-                        },
-                        fallback: (BuildContext context) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        },
-                      ),
-                      const SizedBox(height: 15),
-                    ],
-                  ),
-                ),
+    LoginCubit cubit = LoginCubit.get(context);
+    return BlocConsumer<LoginCubit, LoginStates>(listener: (context, state) {
+      if (state is AppLoginErrorStates) {
+        AppUtil.showSnackbar(
+            context: context,
+            message: state.error,
+            color: AppColor.errorMsgColor);
+      }
+      if (state is AppLoginSuccessStates) {
+        AppUtil.showSnackbar(
+            context: context,
+            message: 'تم تسجيل الدخول بنجاح',
+            color: AppColor.successMsgColor);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const RootApp()));
+      }
+    }, builder: (context, state) {
+      return Scaffold(
+        backgroundColor: AppColor.appBgColor,
+        body: CustomScrollView(
+          slivers: [
+            const SliverAppBar(
+              automaticallyImplyLeading: false,
+              backgroundColor: AppColor.appBarColor,
+              pinned: true,
+              snap: true,
+              floating: true,
+              title: AddTypeAppBar(),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                addRepaintBoundaries: false,
+                addAutomaticKeepAlives: false,
+                (context, index) => _buildBody(cubit, context, state),
+                childCount: 1,
               ),
+            )
+          ],
+        ),
+      );
+    });
+  }
+
+  _buildBody(LoginCubit cubit, BuildContext context, LoginStates state) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.8,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              CustomTextBox(
+                controller: name,
+                hint: 'إسم',
+                validate: (value) {
+                  if (value!.isEmpty) {
+                    return "قم بإدخال الاسم بالأول";
+                  }
+                },
+              ),
+              CustomTextBox(
+                controller: email,
+                hint: 'عنوان البريد الإلكتروني',
+                validate: (value) {
+                  if (value!.isEmpty) {
+                    return "قم بإدخال الاسم بالأول";
+                  }
+                },
+              ),
+              CustomTextBox(
+                validate: (value) {
+                  if (value!.isEmpty) {
+                    return "قم بإدخال كلمة السر بالأول";
+                  }
+                },
+                keyboardType: TextInputType.visiblePassword,
+                hint: 'كلمة السر',
+                controller: password,
+              ),
+              _buildPhoto(cubit),
+              ConditionalBuilder(
+                condition: state is AppLoginLoadingStates,
+                builder: (context) => const CustomProgressIndicator(),
+                fallback: (context) => CustomButton(
+                    radius: 10,
+                    title: "تسجيل الدخول",
+                    onTap: () {
+                      if (_formKey.currentState!.validate()) {
+                        cubit.login(
+                          name: name.text,
+                          image: cubit.image!,
+                          email: email.text,
+                          password: password.text,
+                        );
+                      }
+                    }),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildPhoto(LoginCubit cubit) {
+    return Column(
+      children: [
+        if (cubit.image != null) ...[
+          Container(
+            height: 200,
+            width: 200,
+            margin: const EdgeInsets.only(bottom: 15),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: FileImage(cubit.image!),
+              ),
+              boxShadow: const [
+                BoxShadow(
+                  offset: Offset(0, 4),
+                  blurRadius: 10,
+                  spreadRadius: -5,
+                )
+              ],
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
-        );
-      },
+        ],
+        TextButton(
+          onPressed: () => cubit.uploadImage(),
+          child: const Text('Select image'),
+        ),
+      ],
     );
   }
 }

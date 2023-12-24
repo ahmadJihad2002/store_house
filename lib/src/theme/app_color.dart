@@ -5,6 +5,15 @@ class AppColor {
   static const secondary = Color(0xFFe96561);
 
   static const mainColor = Color(0xFF000000);
+
+  static const cancelColor = Color(0xFFE7B1B1);
+  static const selectColor = Color(0xFF90BAE5);
+  static const quantityColor = Color(0xFF626161);
+
+  static const errorMsgColor = Color(0xFEEF0808);
+  static const successMsgColor = Color(0xFF35EAEA);
+  static const warningMsgColor = Color(0xFFECEC6C);
+
   static const darker = Color(0xFF3E4249);
   static const cardColor = Colors.white;
   static const appBgColor = Color(0xFFF7F7F7);
@@ -19,6 +28,7 @@ class AppColor {
   static const glassLabelColor = Colors.white;
   static const actionColor = Color(0xFFe54140);
 
+  static const white = Color(0xffffffff);
   static const yellow = Color(0xFFffcb66);
   static const green = Color(0xFFa2e1a6);
   static const pink = Color(0xFFf5bde8);

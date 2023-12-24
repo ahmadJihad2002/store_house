@@ -1,35 +1,33 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:store_house/core/services/injection_container.dart';
 import 'package:store_house/core/utils/app_constant.dart';
 import 'package:store_house/firebase_options.dart';
-import 'package:store_house/src/features/auth/pesentation/bloc/login/cubit.dart';
 import 'package:store_house/src/features/auth/pesentation/pages/login/login.dart';
-import 'package:store_house/src/features/goods/domain/repositories/goods_repository.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/add_type/add_type_cubit.dart';
-import 'package:store_house/src/features/goods/pesentation/bloc/get_all_goods_cubit/add_type_cubit.dart';
+import 'package:store_house/src/features/goods/pesentation/bloc/goods_cubit/goods_cubit.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/root_cubit/root_app_cubit.dart';
+import 'package:store_house/src/features/goods/pesentation/bloc/transaction_cubit/transaction_cuit.dart';
 import 'package:store_house/src/root_app.dart';
 
-import 'core/const.dart';
 import 'core/services/cache_helper.dart';
+import 'src/features/auth/pesentation/bloc/login/login_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // await Firebase.initializeApp();
+
   Bloc.observer = MyBlocObserver();
   await CacheHelper.init();
   // await initLocator();
   Widget staringScreen;
-  token = await CacheHelper.getData(key:'token');
+  AppConstant.token = await CacheHelper.getData(key: 'token');
   print('token');
-  print(token);
-  if (token.isEmpty) {
-    staringScreen = Login();
+  print(AppConstant.token);
+  if (AppConstant.token.isEmpty) {
+    staringScreen = LoginPage();
   } else {
     staringScreen = RootApp();
   }
@@ -51,19 +49,17 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (BuildContext context) => AppCubit()),
           BlocProvider(
-              create: (BuildContext context) =>
-                  GetALLGoodsCubit()..getAllGoods()),
-          BlocProvider(create: (BuildContext context) => AppLoginCubit()),
+              create: (BuildContext context) => GoodsCubit()..getAllGoods()),
+          BlocProvider(create: (BuildContext context) => LoginCubit()),
           BlocProvider(create: (BuildContext context) => RootAppCubit()),
-          // BlocProvider(create: (_) => locator.get<CourseBloc>()),
-          // BlocProvider(create: (_) => locator.get<FeatureCourseBloc>()),
-          // BlocProvider(create: (_) => locator.get<RecommendCourseBloc>()),
+          BlocProvider(
+              create: (BuildContext context) =>
+                  TransactionCubit()..getAllTransactions()),
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Flutter Demo',
             theme: ThemeData(
-              textTheme: TextTheme(
+              textTheme: const TextTheme(
                   displayLarge: TextStyle(
                       fontSize: 30,
                       color: Colors.black,

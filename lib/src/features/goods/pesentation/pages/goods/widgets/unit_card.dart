@@ -1,23 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:store_house/src/features/goods/data/models/unit_model.dart';
 import 'package:store_house/src/theme/app_color.dart';
-import '../../../../../../widgets/custom_image.dart';
 
 class UnitCard extends StatelessWidget {
   const UnitCard({
     Key? key,
     required this.unit,
-    // this.width = 280,
-    // this.height = 290,
     this.onTap,
   }) : super(key: key);
 
   final UnitModel unit;
 
-  // final double width;
-  // final double height;
   final GestureTapCallback? onTap;
 
   @override
@@ -45,17 +39,13 @@ class UnitCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(20.0),
               child: Container(
-
-
                 child: CachedNetworkImage(
-                  placeholder: (context,url) => const CircularProgressIndicator(),
-                  errorWidget: (context,url,error) =>   const Icon(Icons.error),
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                   imageUrl: unit.image,
                   fit: BoxFit.fill,
                   width: double.infinity,
-                  // width: double.infinity,
-                  // height: 190,
-                  // radius: 15,
                 ),
               ),
             ),
@@ -71,6 +61,7 @@ class UnitCard extends StatelessWidget {
       // width: width - 20,
       padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
       child: Column(
+        textDirection: TextDirection.rtl,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -96,24 +87,18 @@ class UnitCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _getAttribute(
-          Icons.numbers_outlined,
-          AppColor.labelColor,
-          unit.quantity.toString(),
-        ),
+        _getAttribute(Icons.numbers_outlined, AppColor.labelColor,
+            unit.quantity, unit.threshold),
         const SizedBox(
           width: 12,
         ),
-        _getAttribute(
-          Icons.monetization_on_outlined,
-          AppColor.labelColor,
-          unit.price.toString(),
-        ),
+        _getAttribute(Icons.monetization_on_outlined, AppColor.labelColor,
+            unit.price  , null),
       ],
     );
   }
 
-  _getAttribute(IconData icon, Color color, String quantity) {
+  _getAttribute(IconData icon, Color color, int number, int? threshold) {
     return Row(
       children: [
         Icon(
@@ -125,10 +110,14 @@ class UnitCard extends StatelessWidget {
           width: 3,
         ),
         Text(
-          quantity,
+          number.toString(),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(color: AppColor.labelColor, fontSize: 13),
+          style: TextStyle(
+              color: number > (threshold ?? 0)
+                  ? AppColor.labelColor
+                  : AppColor.primary,
+              fontSize: 13),
         ),
       ],
     );

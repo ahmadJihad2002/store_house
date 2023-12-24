@@ -3,11 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_house/core/utils/app_constant.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/root_cubit/root_app_cubit.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/root_cubit/root_app_states.dart';
-import 'package:store_house/src/features/goods/pesentation/pages/add_type/add_type.dart';
-import 'package:store_house/src/features/goods/pesentation/pages/goods/allGoods.dart';
+
 import 'package:store_house/src/features/goods/pesentation/pages/home/home.dart';
 import 'package:store_house/src/theme/app_color.dart';
 import 'package:store_house/src/widgets/bottombar_item.dart';
+
+import 'features/account/presentation/pages/account/account.dart';
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -23,31 +24,13 @@ class _RootAppState extends State<RootApp> with TickerProviderStateMixin {
       "active_icon": "assets/icons/home.svg",
       "page": HomePage(),
     },
-    {
-      "icon": "assets/icons/goods.svg",
-      "page": const GoodsPage(),
-    },
+
 
     {
-      "icon": "assets/icons/add.svg",
-      "active_icon": "assets/icons/search.svg",
-      "page": AddType(),
+      "icon": "assets/icons/profile.svg",
+      "active_icon": "assets/icons/profile.svg",
+      "page": const AccountPage(),
     },
-    // {
-    //   "icon": "assets/icons/play.svg",
-    //   "active_icon": "assets/icons/play.svg",
-    //   "page": const MyCoursePage(),
-    // },
-    // {
-    //   "icon": "assets/icons/chat.svg",
-    //   "active_icon": "assets/icons/chat.svg",
-    //   "page": const ChatPage(),
-    // },
-    // {
-    //   "icon": "assets/icons/profile.svg",
-    //   "active_icon": "assets/icons/profile.svg",
-    //   "page": const AccountPage(),
-    // },
   ];
 
 //====== set animation=====
@@ -144,7 +127,7 @@ class _RootAppState extends State<RootApp> with TickerProviderStateMixin {
         bottom: 15,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: List.generate(
           _barItems.length,
           (index) => BottomBarItem(

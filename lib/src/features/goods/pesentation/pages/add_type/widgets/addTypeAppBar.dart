@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
- import 'package:store_house/src/theme/app_color.dart';
+import 'package:store_house/src/theme/app_color.dart';
 
 class AddTypeAppBar extends StatelessWidget {
   const AddTypeAppBar({super.key});
@@ -11,10 +11,11 @@ class AddTypeAppBar extends StatelessWidget {
       children: [
         Expanded(
           child: Column(
+            textDirection: TextDirection.rtl,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "إضافة نوع",
+                "تسجيل الدخول",
                 style: TextStyle(
                   color: AppColor.textColor,
                   fontSize: 24,

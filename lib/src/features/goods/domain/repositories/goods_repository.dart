@@ -1,30 +1,27 @@
 import 'dart:io';
 
 import 'package:store_house/core/utils/typedef.dart';
+import 'package:store_house/src/features/goods/data/models/transaction_model.dart';
 import 'package:store_house/src/features/goods/data/models/unit_model.dart';
+import 'package:store_house/src/features/goods/domain/entities/transaction.dart';
 import 'package:store_house/src/features/goods/domain/entities/unit.dart';
+import 'package:store_house/src/features/goods/domain/usecases/edit_unit.dart';
+import 'package:store_house/src/features/goods/pesentation/pages/edit_unit_details/edit_unit_details.dart';
 
 abstract class GoodsRepository {
   const GoodsRepository();
 
-  ResultFuture addNewUnit(
-      {required String name,
-      required String description,
-      required File image,
-      required double price,
-      required int quantity});
+  ResultFuture addNewUnit(UnitParams params);
 
-  ResultFuture increaseUnit();
+  ResultFuture<List<UnitModel>> getAllGoods();
 
-  ResultFuture <List<UnitModel>> getAllGoods();
+  ResultFuture<List<TransactionModel>> getAllTransactions();
 
-  ResultFuture decreaseUnit();
+  ResultFuture deleteUnit(UnitParams params);
+
   ResultFuture changingQuantityOfUnit(String unitID, int newQuantity);
 
-  ResultFuture deleteUnit();
+  ResultFuture editUnit(UnitParams params);
 
-  ResultFuture editUnit();
-
-
-// ResultFuture<List<Unit>> getAllGoods();
+  ResultFuture addTransactionDoc(TransactionParams params);
 }

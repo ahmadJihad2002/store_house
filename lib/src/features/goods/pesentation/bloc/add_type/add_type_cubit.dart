@@ -2,32 +2,19 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:store_house/core/utils/app_util.dart';
-
 import 'package:store_house/src/features/goods/data/repositories/goods_repository_impl.dart';
+import 'package:store_house/src/features/goods/domain/entities/unit.dart';
 import 'package:store_house/src/features/goods/domain/repositories/goods_repository.dart';
+import 'package:store_house/src/features/goods/domain/usecases/add_new_unit.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/add_type/add_type_states.dart';
-
-enum LoanCardType {
-  goodsPage,
-  addUnitPage,
-}
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(AppInitialStates());
   GoodsRepository goodsRepository = GoodsRepositoriesImp();
+  AddNewUnitUseCase addNewUnitUseCase = AddNewUnitUseCase();
 
   static AppCubit get(context) => BlocProvider.of(context);
-
-  int screenIndex = 0;
-
-  List screens = [];
-
-  void changeIndex(int index) {
-    screenIndex = index;
-    emit(AppBottomNavAppBarChangeStates());
-  }
 
   File? image;
 
@@ -60,51 +47,34 @@ class AppCubit extends Cubit<AppStates> {
     } else {
       quantity -= 1;
     }
-
     emit(AppChangeQuantityState());
   }
 
-  String? selectedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  String? selectedDate = AppUtil.selectedDate;
 
-  Future<Function?> selectDate(BuildContext context) async {
-    return showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(3000),
-    ).then((value) {
-      if (value != null) {
-        selectedDate = DateFormat('yyyy-MM-dd').format(value!);
-      } else {
-        selectedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      }
-      emit(AppDateBeenSelectedState());
-    });
+  Future selectDate(BuildContext context) async {
+    AppUtil.selectDate(context);
+    emit(AppDateBeenSelectedState());
   }
-
-  // void addType(
-  //     {required String name,
-  //     required String description,
-  //     required File image,
-  //     required int quantity}) {
-  //   emit(AppAddTypeSuccessState());
-  // }
 
   void addNewType(
       {required String name,
       required String description,
       required File image,
-      required double price,
-      required int quantity}) async {
+      required int price,
+      required int quantity,
+      int? threshold}) async {
     emit(AppAddNewTypeLoadingState());
     try {
-      await goodsRepository.addNewUnit(
-        price: price,
-        image: image,
+      await addNewUnitUseCase(UnitParams(
+        name: name,
         quantity: quantity,
         description: description,
-        name: name,
-      );
+        image: image,
+        price: price,
+        threshold: threshold,
+      ));
+
       emit(AppAddNewTypeSuccessState());
     } catch (error, stackTrace) {
       print("Stack trace:\n$stackTrace");

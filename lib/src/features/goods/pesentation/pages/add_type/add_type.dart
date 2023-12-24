@@ -6,34 +6,42 @@ import 'package:store_house/src/features/goods/pesentation/bloc/add_type/add_typ
 import 'package:store_house/src/features/goods/pesentation/bloc/add_type/add_type_states.dart';
 import 'package:store_house/src/features/goods/pesentation/pages/add_type/widgets/addTypeAppBar.dart';
 import 'package:store_house/src/theme/app_color.dart';
+import 'package:store_house/src/widgets/build_svg_icon.dart';
 import 'package:store_house/src/widgets/custom_button.dart';
 import 'package:store_house/src/widgets/custom_progress_indicator.dart';
 import 'package:store_house/src/widgets/custom_textfield.dart';
 
-class AddType extends StatelessWidget {
-  AddType({Key? key}) : super(key: key);
+class AddNewType extends StatelessWidget {
+  AddNewType({Key? key}) : super(key: key);
   TextEditingController name = TextEditingController();
   TextEditingController description = TextEditingController();
   TextEditingController quantity = TextEditingController();
+  TextEditingController threshold = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     AppCubit cubit = AppCubit.get(context);
     return BlocConsumer<AppCubit, AppStates>(listener: (context, state) {
-
       if (state is AppChangeQuantityErrorState) {
-        AppUtil.showSnackbar(context: context, message: 'العدد اقل من 0');
+        AppUtil.showSnackbar(
+          context: context,
+          message: 'العدد اقل من 0',
+          color: AppColor.orange,
+        );
       }
       if (state is AppAddNewTypeErrorState) {
-        AppUtil.showSnackbar(context: context, message: state.error);
+        AppUtil.showSnackbar(
+            context: context, message: state.error, color: AppColor.red);
       }
       if (state is AppAddNewTypeSuccessState) {
-        AppUtil.showSnackbar(context: context, message: 'تم الاضافة بنجاح');
-        // cubit.screenIndex=
+        AppUtil.showSnackbar(
+            context: context,
+            message: 'تم الاضافة بنجاح',
+            color: AppColor.blue);
+        Navigator.pop(context);
       }
     }, builder: (context, state) {
-
       return Scaffold(
         backgroundColor: AppColor.appBgColor,
         body: CustomScrollView(
@@ -122,14 +130,14 @@ class AddType extends StatelessWidget {
                     onPressed: () {
                       cubit.changeQuantity(state: true);
                     },
-                    icon: AppUtil.customIcon(
-                        imagePath: "assets/icons/increment.svg", high: 40)),
+                    icon: BuildSVGIcon(
+                        icon: "assets/icons/increment.svg", height: 40)),
                 IconButton(
                     onPressed: () {
                       cubit.changeQuantity(state: false);
                     },
-                    icon: AppUtil.customIcon(
-                        imagePath: "assets/icons/minus.svg", high: 30)),
+                    icon: BuildSVGIcon(
+                        icon: "assets/icons/minus.svg", height: 30)),
                 Expanded(
                     child: CustomTextBox(
                   label: 'الكمية',
@@ -151,6 +159,14 @@ class AddType extends StatelessWidget {
               onTap: () => cubit.selectDate(context),
             ),
             const SizedBox(height: 30),
+            CustomTextBox(
+              readOnly: true,
+              keyboardType: TextInputType.datetime,
+              hint: 'الكمية الأدنى لتفعيل التنبي (إختياري)',
+              controller: threshold,
+              onTap: () => cubit.selectDate(context),
+            ),
+            const SizedBox(height: 30),
             ConditionalBuilder(
               condition: state is AppAddNewTypeLoadingState,
               builder: (context) => const CustomProgressIndicator(),
@@ -166,6 +182,7 @@ class AddType extends StatelessWidget {
                       image: cubit.image!,
                       quantity: cubit.quantity,
                       price: 0,
+                      threshold: int.parse(threshold.text),
                     );
                   }),
             ),

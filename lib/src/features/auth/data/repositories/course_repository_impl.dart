@@ -2,47 +2,23 @@ import 'package:dartz/dartz.dart';
 import 'package:store_house/core/errors/exception.dart';
 import 'package:store_house/core/errors/failure.dart';
 import 'package:store_house/core/utils/typedef.dart';
-import 'package:store_house/src/features/course/data/data_sources/course_remote_data_source.dart';
- import 'package:store_house/src/features/course/data/models/course_model.dart';
-import 'package:store_house/src/features/course/domain/entities/course.dart';
-import 'package:store_house/src/features/course/domain/repositories/course_repository.dart';
+import 'package:store_house/src/features/auth/data/data_sources/auth_remote_data_source.dart';
+import 'package:store_house/src/features/auth/data/models/user_model.dart';
+import 'package:store_house/src/features/auth/domain/entities/user.dart';
+import 'package:store_house/src/features/auth/domain/repositories/auth_repository.dart';
 
-class CourseRepositoryImpl extends CourseRepository {
-  const CourseRepositoryImpl(this._courseRemoteDataSource);
-  final CourseRemoteDataSource _courseRemoteDataSource;
+class AuthRepositoryImpl extends AuthRepository {
+
+  final AuthRemoteDataSource  _authRemoteDataSource=AuthDataSourceImpl();
 
   @override
-  ResultFuture<List<CourseModel>> getCourses() async {
+  ResultFuture<UserModel> login(UserParams params)async {
     try {
-      final result = await _courseRemoteDataSource.getCourses();
+      final result = await _authRemoteDataSource.reg(params);
       return Right(result);
     } on ServerException {
       return const Left(
-        ServerFailure(message: 'failed to connect to server', statusCode: 400),
-      );
-    }
-  }
-
-  @override
-  ResultFuture<List<Course>> getFeaturedCourses() async {
-    try {
-      final result = await _courseRemoteDataSource.getFeaturedCourses();
-      return Right(result);
-    } on ServerException {
-      return const Left(
-        ServerFailure(message: 'failed to connect to server', statusCode: 400),
-      );
-    }
-  }
-
-  @override
-  ResultFuture<List<Course>> getRecommendCourses() async {
-    try {
-      final result = await _courseRemoteDataSource.getRecommendCourses();
-      return Right(result);
-    } on ServerException {
-      return const Left(
-        ServerFailure(message: 'failed to connect to server', statusCode: 400),
+        ServerFailure(message: 'تعذر تسجيل الدخول', statusCode: 400),
       );
     }
   }

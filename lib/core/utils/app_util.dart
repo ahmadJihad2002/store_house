@@ -2,9 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:store_house/src/theme/app_color.dart';
 
 class AppUtil {
   static void debugPrint(var value) {
@@ -16,20 +17,30 @@ class AppUtil {
   }
 
   static showSnackbar(
-      {required BuildContext context, required String message}) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+      {required BuildContext context,
+      required String message,
+      Color color = AppColor.appBgColor}) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+      backgroundColor: color,
+    ));
   }
 
-  static Widget customIcon(
-      {required String imagePath, double width = 23, double high = 23}) {
-    return SvgPicture.asset(
-      imagePath,
-      // colorFilter:
-      // ColorFilter.mode(isActive ? activeColor : color, BlendMode.srcIn),
-      width: width,
-      height: high,
-    );
+  static String? selectedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+  static Future<Function?> selectDate(BuildContext context) async {
+    return showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(3000),
+    ).then((value) {
+      if (value != null) {
+        selectedDate = DateFormat('yyyy-MM-dd').format(value!);
+      } else {
+        selectedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      }
+    });
   }
 
   static Future<XFile?> pickImageFromGallery() async {

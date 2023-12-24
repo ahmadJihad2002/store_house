@@ -1,57 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:store_house/core/utils/dummy_data.dart';
-import 'package:store_house/src/features/auth/pesentation/bloc/login/cubit.dart';
-import 'package:store_house/src/features/auth/pesentation/bloc/login/states.dart';
-
-import 'package:store_house/src/features/goods/pesentation/pages/add_type/add_type.dart';
+ import 'package:store_house/src/features/goods/pesentation/pages/docs/docs.dart';
 import 'package:store_house/src/features/goods/pesentation/pages/goods/allGoods.dart';
 import 'package:store_house/src/features/goods/pesentation/pages/home/widgets/home_appbar.dart';
 import 'package:store_house/src/features/goods/pesentation/pages/home/widgets/home_item.dart';
+import 'package:store_house/src/features/goods/pesentation/pages/transactions/incoming/new_incoming_page.dart';
+import 'package:store_house/src/features/goods/pesentation/pages/transactions/outgoing/new_outgoing.dart';
 import 'package:store_house/src/theme/app_color.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
 
   final List homeItems = [
-    {"icon": "assets/icons/goods.svg", "page": const GoodsPage()},
-
-    {
-      "icon": "assets/icons/outgoing.svg",
-      "page": AddType()
-    },
-
+    {"icon": "assets/icons/goods.svg", "page": GoodsPage()},
+    {"icon": "assets/icons/docs.svg", "page": Docs()},
+    {"icon": "assets/icons/outgoing.svg", "page": NewOutgoingPage()},
+    {"icon": "assets/icons/incoming.svg", "page": NewIncomingPage()},
   ];
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppLoginCubit, AppLoginStates>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          AppLoginCubit cubit = AppLoginCubit.get(context);
-
-          return Scaffold(
-            backgroundColor: AppColor.appBgColor,
-            body: CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  backgroundColor: AppColor.appBarColor,
-                  pinned: true,
-                  snap: true,
-                  floating: true,
-                  title: HomeAppBar(profile: profile),
-                ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) => _buildBody(context),
-                    childCount: 1,
-                  ),
-                )
-              ],
+    return Scaffold(
+      backgroundColor: AppColor.appBgColor,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            backgroundColor: AppColor.appBarColor,
+            pinned: true,
+            snap: true,
+            floating: true,
+            title: HomeAppBar(profile: profile),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => _buildBody(context),
+              childCount: 1,
             ),
-          );
-        });
+          )
+        ],
+      ),
+    );
   }
 
   _buildBody(BuildContext context) {

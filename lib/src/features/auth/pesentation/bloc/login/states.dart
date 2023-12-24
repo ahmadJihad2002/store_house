@@ -1,15 +1,16 @@
-abstract class AppLoginStates {}
+abstract class LoginStates {}
 
-class AppLoginInitialStates extends AppLoginStates {}
+class AppLoginInitialStates extends LoginStates {}
 
-class AppLoginSuccessStates extends AppLoginStates {}
+class AppLoginSuccessStates extends LoginStates {}
 
-class AppLoginLoadingStates extends AppLoginStates {}
+class AppLoginLoadingStates extends LoginStates {}
 
-class AppLoginErrorStates extends AppLoginStates {
+class AppLoginErrorStates extends LoginStates {
   late String error;
-
   AppLoginErrorStates(this.error);
 }
 
-class AppLoginChangePasswordVisibilityState extends AppLoginStates {}
+class AppSelectImageState extends LoginStates {}
+
+class AppLoginChangePasswordVisibilityState extends LoginStates {}
