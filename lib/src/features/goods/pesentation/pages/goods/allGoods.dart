@@ -2,7 +2,6 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_house/core/utils/app_util.dart';
-import 'package:store_house/src/features/goods/domain/entities/transaction.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/goods_cubit/goods_cubit.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/goods_cubit/goods_states.dart';
 import 'package:store_house/src/features/goods/pesentation/pages/edit_unit_details/edit_unit_details.dart';
@@ -56,48 +55,51 @@ class GoodsPage extends StatelessWidget {
   _buildBody(GoodsCubit cubit, GoodsStates state) {
     return ConditionalBuilder(
         condition: (state is AppGetAllGoodsSuccessStates),
-        fallback: (context) => const Center(child: CustomProgressIndicator()),
+        fallback: (context) => SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: const Center(child: CustomProgressIndicator())),
         builder: (context) {
-          return SizedBox(
-            height: MediaQuery.of(context).size.height - 100,
-            child: RefreshIndicator(
-              onRefresh: () => cubit.getAllGoods() as Future<void>,
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 5 / 7,
-                  crossAxisCount: 2, // Number of columns in the grid
-                  crossAxisSpacing: 8.0, // Spacing between columns
-                  mainAxisSpacing: 8.0,
-
-                  // Spacing between rows
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height - 100,
+              child: RefreshIndicator(
+                onRefresh: () => cubit.getAllGoods() as Future<void>,
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 5 / 7,
+                    crossAxisCount: 2, // Number of columns in the grid
+                    crossAxisSpacing: 8.0, // Spacing between columns
+                    mainAxisSpacing: 8.0,
+                  ),
+                  itemCount: cubit.allUnits.length,
+                  itemBuilder: (context, index) {
+                    return UnitCard(
+                      onTap: () {
+                        // checking if we are browsing goods or piking theme for transactions
+                        if (cubit.addTransactionMode) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return MyCustomDialog(
+                                unit: cubit.allUnits[index],
+                                transactionType: cubit.transactionType!,
+                              );
+                            },
+                          );
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditUnit(
+                                        unit: cubit.allUnits[index],
+                                      )));
+                        }
+                      },
+                      unit: cubit.allUnits[index],
+                    );
+                  },
                 ),
-                itemCount: cubit.allUnits.length,
-                itemBuilder: (context, index) {
-                  return UnitCard(
-                    onTap: () {
-                      // checking if we are browsing goods or piking theme for transactions
-                      if (cubit.addTransactionMode) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return MyCustomDialog(
-                              unit: cubit.allUnits[index],
-                              transactionType: TransactionType.outGoing,
-                            );
-                          },
-                        );
-                      } else {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EditUnit(
-                                      unit: cubit.allUnits[index],
-                                    )));
-                      }
-                    },
-                    unit: cubit.allUnits[index],
-                  );
-                },
               ),
             ),
           );

@@ -28,7 +28,7 @@ class TransactionCubit extends Cubit<TransactionStates> {
     emit(AppDateBeenSelectedState());
   }
 
-  List<UnitModel> incomingGoods = [];
+  List<UnitModel> selectedUnits = [];
 
   void addIncomingUnit(int newQuantity, UnitModel unit) {
     UnitModel incomingUnit = UnitModel.empty();
@@ -38,16 +38,16 @@ class TransactionCubit extends Cubit<TransactionStates> {
     incomingUnit.price = unit.price;
     incomingUnit.id = unit.id;
 
-    incomingGoods.add(incomingUnit);
+    selectedUnits.add(incomingUnit);
     emit(AppUnitAddedToIncomingState());
   }
 
   void deleteIncomingUnit(int index) {
-    incomingGoods.removeAt(index);
+    selectedUnits.removeAt(index);
     emit(AppDeleteIncomingUnitState());
   }
   void deleteIncomingUnitById(String unitId) {
-    incomingGoods.removeAt(    incomingGoods.indexWhere((element) => element.id==unitId)
+    selectedUnits.removeAt(    selectedUnits.indexWhere((element) => element.id==unitId)
     );
     emit(AppDeleteIncomingUnitState());
   }
@@ -58,13 +58,13 @@ class TransactionCubit extends Cubit<TransactionStates> {
 
     // add the current quantity value to new one
 
-    for (int i = 0; i < incomingGoods.length; i++) {
+    for (int i = 0; i < selectedUnits.length; i++) {
       for (int j = 0; j < context.read<GoodsCubit>().allUnits.length; j++) {
-        if (context.read<GoodsCubit>().allUnits[j].id == incomingGoods[i].id) {
-          unit.quantity = incomingGoods[i].quantity +
+        if (context.read<GoodsCubit>().allUnits[j].id == selectedUnits[i].id) {
+          unit.quantity = selectedUnits[i].quantity +
               context.read<GoodsCubit>().allUnits[j].quantity;
 
-          unit.id = incomingGoods[i].id;
+          unit.id = selectedUnits[i].id;
 
           final result = await _changeQuantityOfUnitUseCase(unit);
           result.fold((failure) {
@@ -76,7 +76,7 @@ class TransactionCubit extends Cubit<TransactionStates> {
       }
     }
     emit(AppAddIncomingGoodsSuccessState());
-    incomingGoods.clear();
+    selectedUnits.clear();
   }
 
   Future<void> sendTransaction(
@@ -85,10 +85,10 @@ class TransactionCubit extends Cubit<TransactionStates> {
       required TransactionType transactionType,
       required String timeStamp}) async {
     emit(SendTransactionLoadingStates());
-    print(incomingGoods.toString());
+    print(selectedUnits.toString());
     final result = await _addTransactionUseCase(TransactionParams(
         date: date,
-        units: incomingGoods,
+        units: selectedUnits,
         description: description,
         transactionType: transactionType,
         timeStamp: timeStamp));

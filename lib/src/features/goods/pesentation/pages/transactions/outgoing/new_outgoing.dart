@@ -69,7 +69,7 @@ class NewOutgoingPage extends StatelessWidget {
   _buildBody(
       TransactionCubit cubit, BuildContext context, TransactionStates state) {
     List<UnitModel> selectedUnits =
-        context.read<TransactionCubit>().incomingGoods;
+        context.read<TransactionCubit>().selectedUnits;
     TextEditingController dateController =
         TextEditingController(text: cubit.selectedDate);
 
@@ -93,7 +93,10 @@ class NewOutgoingPage extends StatelessWidget {
               label: 'تعليق',
             ),
             const SizedBox(height: 30),
-            ListOfUnits(units: selectedUnits),
+            ListOfUnits(
+              units: selectedUnits,
+              transactionType: TransactionType.outGoing,
+            ),
             const SizedBox(height: 30),
             ConditionalBuilder(
               condition: state is AppAddIncomingGoodsLoadingState,
@@ -104,6 +107,7 @@ class NewOutgoingPage extends StatelessWidget {
                   onTap: () async {
                     //de activate add transaction mode
                     context.read<GoodsCubit>().addTransactionMode = false;
+
                     await cubit.sendTransaction(
                       date: cubit.selectedDate.toString(),
                       description: description.text,

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_house/core/utils/app_util.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/add_type/add_type_cubit.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/add_type/add_type_states.dart';
+import 'package:store_house/src/features/goods/pesentation/bloc/goods_cubit/goods_cubit.dart';
 import 'package:store_house/src/features/goods/pesentation/pages/add_type/widgets/addTypeAppBar.dart';
 import 'package:store_house/src/theme/app_color.dart';
 import 'package:store_house/src/widgets/build_svg_icon.dart';
@@ -13,10 +14,13 @@ import 'package:store_house/src/widgets/custom_textfield.dart';
 
 class AddNewType extends StatelessWidget {
   AddNewType({Key? key}) : super(key: key);
+
   TextEditingController name = TextEditingController();
+
   TextEditingController description = TextEditingController();
-  TextEditingController quantity = TextEditingController();
+
   TextEditingController threshold = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -39,6 +43,7 @@ class AddNewType extends StatelessWidget {
             context: context,
             message: 'تم الاضافة بنجاح',
             color: AppColor.blue);
+        context.read<GoodsCubit>().getAllGoods();
         Navigator.pop(context);
       }
     }, builder: (context, state) {
@@ -75,82 +80,33 @@ class AddNewType extends StatelessWidget {
   }
 
   _buildBody(AppCubit cubit, BuildContext context, AppStates state) {
-    TextEditingController quantityController =
-        TextEditingController(text: cubit.quantity.toString());
     TextEditingController dateController =
         TextEditingController(text: cubit.selectedDate);
     return Form(
       key: _formKey,
       child: Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
+        padding:
+            const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             CustomTextBox(
+              validate: (string) {
+                if (string == null || string.isEmpty) {
+                  return 'أضف اسم';
+                } else {
+                  return null;
+                }
+              },
               controller: name,
               hint: 'إسم',
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
             CustomTextBox(
               controller: description,
-              label: 'الوصف',
               hint: 'الوصف',
             ),
-            const SizedBox(height: 30),
-            if (cubit.image != null) ...[
-              Container(
-                height: 200,
-                width: 200,
-                margin: const EdgeInsets.only(bottom: 15),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: FileImage(cubit.image!),
-                  ),
-                  boxShadow: const [
-                    BoxShadow(
-                      offset: Offset(0, 4),
-                      blurRadius: 10,
-                      spreadRadius: -5,
-                    )
-                  ],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ],
             const SizedBox(height: 10),
-            TextButton(
-              onPressed: () => cubit.uploadImage(),
-              child: const Text('Select image'),
-            ),
-            const SizedBox(height: 30),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      cubit.changeQuantity(state: true);
-                    },
-                    icon: BuildSVGIcon(
-                        icon: "assets/icons/increment.svg", height: 40)),
-                IconButton(
-                    onPressed: () {
-                      cubit.changeQuantity(state: false);
-                    },
-                    icon: BuildSVGIcon(
-                        icon: "assets/icons/minus.svg", height: 30)),
-                Expanded(
-                    child: CustomTextBox(
-                  label: 'الكمية',
-                  // hint: 'الكمية',
-                  onChange: (string) {
-                    cubit.quantity = int.parse(string);
-                  },
-                  controller: quantityController,
-                  keyboardType: TextInputType.number,
-                ))
-              ],
-            ),
-            const SizedBox(height: 30),
             CustomTextBox(
               readOnly: true,
               keyboardType: TextInputType.datetime,
@@ -158,37 +114,143 @@ class AddNewType extends StatelessWidget {
               controller: dateController,
               onTap: () => cubit.selectDate(context),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
             CustomTextBox(
-              readOnly: true,
-              keyboardType: TextInputType.datetime,
-              hint: 'الكمية الأدنى لتفعيل التنبي (إختياري)',
+              keyboardType: TextInputType.number,
+              hint: 'العدد الأدنى لتفعيل التنبيه (إختياري)',
               controller: threshold,
-              onTap: () => cubit.selectDate(context),
             ),
             const SizedBox(height: 30),
-            ConditionalBuilder(
-              condition: state is AppAddNewTypeLoadingState,
-              builder: (context) => const CustomProgressIndicator(),
-              fallback: (context) => CustomButton(
-                  radius: 10,
-                  title: "إضافة",
-                  onTap: () {
-                    print(_formKey.currentState!.validate());
-
-                    cubit.addNewType(
-                      name: name.text,
-                      description: description.text,
-                      image: cubit.image!,
-                      quantity: cubit.quantity,
-                      price: 0,
-                      threshold: int.parse(threshold.text),
-                    );
-                  }),
-            ),
+            _buildPhoto(cubit),
+            const SizedBox(height: 30),
+            _buildQuantity(cubit),
+            const SizedBox(height: 30),
+            _buildButton(cubit, state)
           ],
         ),
       ),
+    );
+  }
+
+  _buildButton(AppCubit cubit, AppStates state) {
+    return ConditionalBuilder(
+      condition: state is AppAddNewTypeLoadingState,
+      builder: (context) => const CustomProgressIndicator(),
+      fallback: (context) => CustomButton(
+          radius: 10,
+          title: "إضافة",
+          onTap: () {
+            if (_formKey.currentState!.validate()) {
+              if (cubit.image != null) {
+                cubit.addNewType(
+                  name: name.text,
+                  description: description.text,
+                  image: cubit.image!,
+                  quantity: cubit.quantity,
+                  price: 0,
+                  threshold: int.tryParse(threshold.text),
+                );
+                cubit.image != null;
+              } else {
+                AppUtil.showSnackbar(
+                    context: context,
+                    message: 'قم بإضافة صورة',
+                    color: AppColor.warningMsgColor);
+              }
+            }
+          }),
+    );
+  }
+
+  _buildQuantity(AppCubit cubit) {
+    TextEditingController quantityController =
+        TextEditingController(text: cubit.quantity.toString());
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        IconButton(
+            onPressed: () {
+              cubit.changeQuantity(state: true);
+            },
+            icon: const BuildSVGIcon(
+              height: 40,
+              icon: "assets/icons/increment.svg",
+            )),
+        SizedBox(
+          width: 100,
+          child: CustomTextBox(
+            label: 'الكمية',
+            onChange: (string) {
+              cubit.quantity = int.parse(string);
+            },
+            controller: quantityController,
+            keyboardType: TextInputType.number,
+          ),
+        ),
+        IconButton(
+            onPressed: () {
+              cubit.changeQuantity(state: false);
+            },
+            icon: const BuildSVGIcon(
+              icon: "assets/icons/minus.svg",
+              height: 30,
+            )),
+      ],
+    );
+  }
+
+  _buildPhoto(AppCubit cubit) {
+    return Column(
+      children: [
+        if (cubit.image != null) ...[
+          Container(
+            height: 200,
+            width: 200,
+            margin: const EdgeInsets.only(bottom: 15),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: FileImage(cubit.image!),
+              ),
+              boxShadow: const [
+                BoxShadow(
+                  offset: Offset(0, 4),
+                  blurRadius: 10,
+                  spreadRadius: -5,
+                )
+              ],
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ],
+        if (cubit.image == null) ...[
+          Container(
+            width: 200,
+            height: 200,
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: AppColor.shadowColor.withOpacity(0.05),
+                spreadRadius: .5,
+                blurRadius: .5,
+                offset: const Offset(0, 1),
+              ),
+            ], border: Border.all(style: BorderStyle.solid)),
+            child: GestureDetector(
+                onTap: () => cubit.uploadImage(),
+                child: const Center(
+                  child: BuildSVGIcon(
+                    height: 50,
+                    icon: 'assets/icons/addPhoto.svg',
+                  ),
+                )),
+          ),
+        ],
+        const SizedBox(height: 10),
+        TextButton(
+          onPressed: () => cubit.uploadImage(),
+          child: const Text('إختيار صورة '),
+        ),
+      ],
     );
   }
 }

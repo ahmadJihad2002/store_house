@@ -77,7 +77,7 @@ class _MyCustomDialogState extends State<MyCustomDialog> {
                 if (widget.transactionType == TransactionType.outGoing) {
                   if (int.parse(string) > widget.unit.quantity) {
                     setState(() {
-                      error = 'العدد اكبر من الكمية المتوفرة في المخزوك';
+                      error = 'العدد اكبر من الكمية المتوفرة في المخزون';
                       disableButton = true;
                     });
                   } else {

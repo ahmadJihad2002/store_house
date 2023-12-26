@@ -5,7 +5,6 @@ import 'package:store_house/src/features/goods/domain/entities/transaction.dart'
 import 'package:store_house/src/features/goods/pesentation/bloc/goods_cubit/goods_cubit.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/transaction_cubit/transaction_cuit.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/transaction_cubit/transaction_states.dart';
-import 'package:store_house/src/features/goods/pesentation/pages/transactions/incoming/widgets/incoming_units.dart';
 import 'package:store_house/src/features/goods/pesentation/pages/transactions/widgets/list_of_selected_units.dart';
 import 'package:store_house/src/theme/app_color.dart';
 import 'package:store_house/src/widgets/custom_button.dart';
@@ -42,7 +41,7 @@ class NewIncomingPage extends StatelessWidget {
               leading: IconButton(
                 color: Colors.black,
                 onPressed: () {
-                  context.read<GoodsCubit>().addTransactionMode=false;
+                  context.read<GoodsCubit>().addTransactionMode = false;
 
                   Navigator.pop(context);
                 },
@@ -87,14 +86,14 @@ class NewIncomingPage extends StatelessWidget {
               controller: dateController,
               onTap: () => cubit.selectDate(context),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
             CustomTextBox(
               controller: description,
               label: 'تعليق',
             ),
             const SizedBox(height: 30),
-            ListOfUnits(units:cubit.incomingGoods),
-            // IncomingUnits(),
+            ListOfUnits(units: cubit.selectedUnits,transactionType: TransactionType.incoming,),
+
             const SizedBox(height: 30),
             ConditionalBuilder(
               condition: state is AppAddIncomingGoodsLoadingState,
@@ -103,7 +102,8 @@ class NewIncomingPage extends StatelessWidget {
                   radius: 10,
                   title: "إضافة",
                   onTap: () async {
-                    context.read<GoodsCubit>().addTransactionMode=false;
+                    context.read<GoodsCubit>().addTransactionMode = false;
+
 
                     await cubit.sendTransaction(
                       date: cubit.selectedDate.toString(),

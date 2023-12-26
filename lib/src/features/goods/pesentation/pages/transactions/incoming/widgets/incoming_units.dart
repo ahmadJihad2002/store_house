@@ -39,7 +39,7 @@ class IncomingUnits extends StatelessWidget {
                     children: [
                       Column(
                         children: List.generate(
-                          cubit.incomingGoods.length,
+                          cubit.selectedUnits.length,
                           (index) => Stack(children: [
                             Container(
                               margin: const EdgeInsets.only(top: 10),
@@ -51,9 +51,9 @@ class IncomingUnits extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  Text("${cubit.incomingGoods[index].price}"),
+                                  Text("${cubit.selectedUnits[index].price}"),
                                   Text(
-                                      '${cubit.incomingGoods[index].quantity}'),
+                                      '${cubit.selectedUnits[index].quantity}'),
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(20.0),
                                     child: Container(
@@ -65,14 +65,14 @@ class IncomingUnits extends StatelessWidget {
                                         errorWidget: (context, url, error) =>
                                             const Icon(Icons.error),
                                         imageUrl:
-                                            cubit.incomingGoods[index].image,
+                                            cubit.selectedUnits[index].image,
                                         fit: BoxFit.fill,
                                         width: double.infinity,
                                       ),
                                     ),
                                   ),
                                   Text(
-                                    cubit.incomingGoods[index].name,
+                                    cubit.selectedUnits[index].name,
                                   ),
                                 ],
                               ),

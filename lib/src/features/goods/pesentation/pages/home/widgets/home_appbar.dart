@@ -16,13 +16,13 @@ class HomeAppBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                profile["name"]!,
-                style: const TextStyle(
-                  color: AppColor.labelColor,
-                  fontSize: 14,
-                ),
-              ),
+              // Text(
+              //   profile["name"]!,
+              //   style: const TextStyle(
+              //     color: AppColor.labelColor,
+              //     fontSize: 14,
+              //   ),
+              // ),
               const SizedBox(
                 height: 5,
               ),

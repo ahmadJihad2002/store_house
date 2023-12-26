@@ -15,7 +15,7 @@ class AddTypeAppBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "تسجيل الدخول",
+                "إضافة صنف جديد",
                 style: TextStyle(
                   color: AppColor.textColor,
                   fontSize: 24,

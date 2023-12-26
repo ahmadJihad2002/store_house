@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:store_house/src/features/goods/data/models/transaction_model.dart';
 import 'package:store_house/src/features/goods/data/models/unit_model.dart';
@@ -26,7 +25,6 @@ abstract class GoodsRemoteDataSource {
 
 class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
-
 
   GoodsRemoteDataSourceImp();
 
@@ -93,7 +91,8 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
           description: params.description,
           image: getImageNameFromPath(params.image),
           price: params.price,
-          quantity: params.quantity);
+          quantity: params.quantity,
+          threshold: params.threshold);
 
       await uploadImage(
           image: params.image, imageName: getImageNameFromPath(params.image));
@@ -121,7 +120,9 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
           description: params.description,
           image: getImageNameFromPath(params.image),
           price: params.price,
-          quantity: params.quantity);
+          quantity: params.quantity,
+      threshold: params.threshold
+      );
       await fireStore
           .collection('storehouses')
           // .doc(auth.currentUser!.uid)
