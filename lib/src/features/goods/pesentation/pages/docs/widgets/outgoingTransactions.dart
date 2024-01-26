@@ -11,14 +11,13 @@ class OutgoingTransactions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: context.read<TransactionCubit>().transactions
+      children: context
+          .watch<TransactionCubit>()
+          .transactions
           .where((e) => e.transactionType == TransactionType.outGoing)
           .map((e) => TransactionCard(
-        date: e.date,
-        transactionType: e.transactionType,
-        description: e.description,
-        units: e.units,
-      ))
+                doc: e,
+              ))
           .toList(),
     );
   }

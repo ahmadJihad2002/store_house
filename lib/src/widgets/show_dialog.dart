@@ -1,101 +1,88 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:store_house/src/features/goods/data/models/unit_model.dart';
- import 'package:store_house/src/features/goods/pesentation/bloc/goods_cubit/goods_cubit.dart';
-import 'package:store_house/src/features/goods/pesentation/bloc/goods_cubit/goods_states.dart';
-import 'package:store_house/src/features/goods/pesentation/bloc/transaction_cubit/transaction_cuit.dart';
 import 'package:store_house/src/theme/app_color.dart';
 import 'package:store_house/src/widgets/custom_button.dart';
-import 'package:store_house/src/widgets/custom_textfield.dart';
 
-class MyCustomDialog extends StatelessWidget {
-  MyCustomDialog({super.key, required this.unit});
+import '../theme/text_style.dart';
 
-  final UnitModel unit;
+class CustomDialog extends StatefulWidget {
+  CustomDialog({
+    Key? key,
+    required this.message,
+    required this.title,
+    required this.onTapAction,
+  }) : super(key: key);
 
-  final _formKey = GlobalKey<FormState>();
+  final String message;
+  final String title;
+  final Function() onTapAction;
 
-  TextEditingController quantity = TextEditingController();
+  @override
+  State<CustomDialog> createState() => _CustomDialogState();
+}
+
+class _CustomDialogState extends State<CustomDialog> {
+  bool disableButton = true;
+  int timeLimit = 3;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    counter();
+  }
+
+  void counter() {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        timeLimit -= 1;
+        if (timeLimit == 0) {
+          timer.cancel();
+          disableButton = false;
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    GoodsCubit cubit = GoodsCubit.get(context);
-
-    return BlocConsumer<GoodsCubit, GoodsStates>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          return AlertDialog(
-            backgroundColor: AppColor.appBgColor,
-            title: const Text('تصدير'),
-            content: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                textDirection: TextDirection.rtl,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    unit.name,
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w800),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    textDirection: TextDirection.rtl,
-                    children: [
-                      const Text(
-                        'متوفر في المخزون',
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      Expanded(
-                        child: Text(
-                          unit.quantity.toString(),
-                          style: const TextStyle(
-                              fontSize: 10, color: AppColor.quantityColor),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  CustomTextBox(
-                    validate: (value) {
-                      if (value!.isEmpty) {}
-                    },
-                    keyboardType: TextInputType.number,
-                    controller: quantity,
-                    label: 'العدد',
-                  )
-                ],
-              ),
+    return AlertDialog(
+      backgroundColor: AppColor.appBgColor,
+      title: Directionality(
+        textDirection: TextDirection.rtl, // Set the desired text direction
+        child: Text(widget.title),
+      ),
+      titleTextStyle: AppTextStyle.titleLine,
+      content: Column(
+        textDirection: TextDirection.rtl,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              widget.message,
+              style: AppTextStyle.descriptionStyle,
             ),
-            actions: [
-              CustomButton(
-                  width: 100,
-                  onTap: () => Navigator.pop(context),
-                  title: 'إلغاء',
-                  textColor: AppColor.secondary,
-                  bgColor: AppColor.white),
-              CustomButton(
-                width: 100,
-                title: 'إدخال',
-                onTap: () {
-                  if (_formKey.currentState!.validate()) {
-                    context
-                        .read<TransactionCubit>()
-                        .addIncomingUnit(int.parse(quantity.text), unit);
-
-                    // cubit.addIncomingUnit(int.parse(quantity.text), unit);
-                    Navigator.pop(context);
-                  }
-                },
-              ),
-            ],
-          );
-        });
+          ),
+        ],
+      ),
+      actions: [
+        CustomButton(
+            width: 100,
+            onTap: () => Navigator.pop(context),
+            title: 'إلغاء',
+            textColor: AppColor.secondary,
+            bgColor: AppColor.white),
+        CustomButton(
+            width: 100,
+            title: ' موافق ${timeLimit == 0 ? '' : '($timeLimit)'} ',
+            disableButton: disableButton,
+            onTap: () {
+              widget.onTapAction();
+              Navigator.pop(context);
+            }),
+      ],
+    );
   }
 }

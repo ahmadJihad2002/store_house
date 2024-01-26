@@ -4,11 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:store_house/core/errors/exception.dart';
-import 'package:store_house/src/features/auth/data/models/user_model.dart';
+import 'package:store_house/src/features/account/data/models/user_model.dart';
 import 'package:store_house/src/features/auth/domain/entities/user.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<UserModel> reg(UserParams params);
+  Future<String> reg(UserParams params);
 }
 
 class AuthDataSourceImpl implements AuthRemoteDataSource {
@@ -16,7 +16,7 @@ class AuthDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
-  Future<UserModel> reg(UserParams params) async {
+  Future<String> reg(UserParams params) async {
     try {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: params.email, password: params.password);
@@ -36,9 +36,9 @@ class AuthDataSourceImpl implements AuthRemoteDataSource {
           .doc(auth.currentUser!.uid)
           .set(user.toJson());
 
-      return user;
+      return userCredential.user!.uid;
     } catch (error) {
-      throw ServerException();
+      throw ServerException(error: error.toString());
       throw FirebaseException(plugin: error.toString());
     }
   }
@@ -51,8 +51,11 @@ class AuthDataSourceImpl implements AuthRemoteDataSource {
   }
 
   uploadImage({required File image, required String imageName}) async {
-    Reference storageReference =
-        FirebaseStorage.instance.ref().child('pictures/$imageName');
+    print('uploading this image ');
+    Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('pictures/${auth.currentUser!.uid}/$imageName');
+
     UploadTask uploadTask = storageReference.putFile(image);
     print('csd');
     await uploadTask.whenComplete(() {

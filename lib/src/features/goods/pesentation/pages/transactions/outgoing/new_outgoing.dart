@@ -1,7 +1,7 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:store_house/core/services/util.dart';
+ import 'package:store_house/core/utils/app_util.dart';
 import 'package:store_house/src/features/goods/data/models/unit_model.dart';
 import 'package:store_house/src/features/goods/domain/entities/transaction.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/goods_cubit/goods_cubit.dart';
@@ -28,8 +28,10 @@ class NewOutgoingPage extends StatelessWidget {
       if (state is AppAddIncomingGoodsSuccessState) {
         context.read<GoodsCubit>().getAllGoods();
         context.read<TransactionCubit>().getAllTransactions();
-
-        showToast(text: 'تم الضافة بنجاح', state: ToastStates.success);
+        Navigator.pop(context);
+        AppUtil.showSnackbar(context: context,
+            message: 'تم الضافة بنجاح',
+            color: AppColor.successMsgColor);
       }
     }, builder: (context, state) {
       return Scaffold(
@@ -104,9 +106,13 @@ class NewOutgoingPage extends StatelessWidget {
               fallback: (context) => CustomButton(
                   radius: 10,
                   title: "إضافة",
+                  disableButton: context.watch<TransactionCubit>().selectedUnits.isEmpty,
+
                   onTap: () async {
                     //de activate add transaction mode
                     context.read<GoodsCubit>().addTransactionMode = false;
+                    cubit.changeQuantityOfUnit(
+                        context, TransactionType.outGoing);
 
                     await cubit.sendTransaction(
                       date: cubit.selectedDate.toString(),
@@ -115,7 +121,6 @@ class NewOutgoingPage extends StatelessWidget {
                       timeStamp:
                           DateTime.now().millisecondsSinceEpoch.toString(),
                     );
-                    cubit.changeQuantityOfUnit(context);
                   }),
             ),
           ],

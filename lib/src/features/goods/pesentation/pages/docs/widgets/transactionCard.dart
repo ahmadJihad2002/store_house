@@ -1,42 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:store_house/src/features/goods/data/models/transaction_model.dart';
 import 'package:store_house/src/features/goods/domain/entities/transaction.dart';
+import 'package:store_house/src/features/goods/pesentation/pages/docs/doc_details.dart';
 import 'package:store_house/src/theme/app_color.dart';
-
-import '../../../../data/models/unit_model.dart';
 
 class TransactionCard extends StatefulWidget {
   const TransactionCard({
     Key? key,
-    required this.date,
-    required this.transactionType,
-    required this.description,
-    required this.units,
+    required this.doc,
   }) : super(key: key);
-  final String date;
-  final TransactionType transactionType;
-  final String description;
-  final List<UnitModel> units;
+
+  final TransactionModel doc;
 
   @override
   State<TransactionCard> createState() => _TransactionCardState();
 }
 
 class _TransactionCardState extends State<TransactionCard> {
-  bool isSelected = false;
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // onLongPress: () {
-      //   setState(() {
-      //     isSelected = true;
-      //   });
-      // },
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) => DocsDetails(
+                      doc: widget.doc,
+                    )));
+      },
       child: Container(
           padding: const EdgeInsets.all(10),
           margin: const EdgeInsets.symmetric(vertical: 5),
           decoration: BoxDecoration(
-            color: isSelected ? AppColor.selectColor : Colors.white,
+            color: Colors.white,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
@@ -57,24 +53,33 @@ class _TransactionCardState extends State<TransactionCard> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                        widget.description.isEmpty
+                        widget.doc.description.isEmpty
                             ? 'لا يوجد'
-                            : widget.description,
+                            : widget.doc.description,
                         style: const TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w800)),
-                    Text(widget.transactionType == TransactionType.incoming
+                    Text(widget.doc.transactionType == TransactionType.incoming
                         ? 'صادر'
                         : 'وارد'),
                   ],
                 ),
-                Text(widget.date),
-                Row(
-                    children: widget.units
+                Text(widget.doc.date),
+                Wrap(
+                      children: widget.doc.units
                         .map(
-                          (e) => Text(
-                            "${e.name} : ${e.quantity} ",
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w300, fontSize: 10),
+                          (e) => Row(
+                            children: [
+                              const SizedBox(
+                                width: 10,
+                                height: 20,
+                              ),
+                              Text(
+                                "${e.name} : ${e.quantity}",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 10),
+                              ),
+                            ],
                           ),
                         )
                         .toList()),

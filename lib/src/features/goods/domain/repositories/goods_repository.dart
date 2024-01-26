@@ -13,7 +13,7 @@ abstract class GoodsRepository {
 
   ResultFuture addNewUnit(UnitParams params);
 
-  ResultFuture<List<UnitModel>> getAllGoods();
+  ResultFuture< List<UnitModel>> getAllGoods();
 
   ResultFuture<List<TransactionModel>> getAllTransactions();
 
@@ -21,7 +21,8 @@ abstract class GoodsRepository {
 
   ResultFuture changingQuantityOfUnit(String unitID, int newQuantity);
 
-  ResultFuture editUnit(UnitParams params);
+  ResultFuture editUnit(UnitParams params,{File? oldImage});
 
   ResultFuture addTransactionDoc(TransactionParams params);
+  ResultFuture deleteTransactionDoc(String transactionId);
 }

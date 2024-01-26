@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_house/src/features/goods/data/models/unit_model.dart';
 import 'package:store_house/src/features/goods/domain/entities/transaction.dart';
+import 'package:store_house/src/features/goods/pesentation/bloc/goods_cubit/goods_cubit.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/transaction_cubit/transaction_cuit.dart';
 import 'package:store_house/src/theme/app_color.dart';
 import 'package:store_house/src/widgets/custom_button.dart';
@@ -119,7 +120,8 @@ class _MyCustomDialogState extends State<MyCustomDialog> {
             if (_formKey.currentState!.validate()) {
               context
                   .read<TransactionCubit>()
-                  .addIncomingUnit(int.parse(quantity.text), widget.unit);
+                  .addUnitToTransactions(int.parse(quantity.text), widget.unit);
+
 
 
               Navigator.pop(context);

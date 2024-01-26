@@ -83,8 +83,8 @@ class _DocsState extends State<Docs> with SingleTickerProviderStateMixin {
                 controller: _tabController,
                 children: const [
                   AllTransactions(),
-                  IncomingTransactions(),
                   OutgoingTransactions(),
+                  IncomingTransactions(),
                 ],
               ),
             ),

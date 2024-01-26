@@ -36,7 +36,10 @@ class CustomTextBox extends StatelessWidget {
         if (label != null) ...[
           Text(
             label!,
-            style: const TextStyle(fontSize: 14),
+            style: const   TextStyle(
+              color: Colors.grey,
+              fontSize: 12,
+            ),
           ),
         ],
         Container(

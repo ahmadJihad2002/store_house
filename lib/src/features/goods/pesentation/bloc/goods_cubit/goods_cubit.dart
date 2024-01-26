@@ -6,7 +6,7 @@ import 'package:store_house/src/features/goods/pesentation/bloc/goods_cubit/good
 
 class GoodsCubit extends Cubit<GoodsStates> {
   GoodsCubit() : super(AppGetAllGoodsInitialStates());
-  GetAllGoodsUseCase getAllGoodsUseCase = GetAllGoodsUseCase();
+  final GetAllGoodsUseCase _getAllGoodsUseCase = GetAllGoodsUseCase();
 
   static GoodsCubit get(context) => BlocProvider.of(context);
 
@@ -17,14 +17,18 @@ class GoodsCubit extends Cubit<GoodsStates> {
 
   void getAllGoods() async {
     emit(AppGetAllGoodsLoadingStates());
-    final result = await getAllGoodsUseCase();
+    final result = await _getAllGoodsUseCase();
     result.fold(
         (failure) => emit(AppGetAllGoodsErrorStates(failure.errorMessage)),
         (r) async {
-      allUnits = r;
-      await Future.delayed(
-          const Duration(seconds: 1)); // Ensure asynchronous execution
-
+      allUnits = await r;
+      print(allUnits.toString());
+      // //
+      //
+      // while (allUnits) {
+      //   Future.delayed(const Duration(seconds: 2));
+      //   print('empty shit');
+      // }
       emit(AppGetAllGoodsSuccessStates());
     });
   }

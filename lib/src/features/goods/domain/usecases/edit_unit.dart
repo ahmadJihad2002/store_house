@@ -9,6 +9,6 @@ class EditUnitUseCase extends UseCaseWithParams<void, UnitParams> {
 
   @override
   ResultFuture call(UnitParams params) async {
-    return await _goodsRepository.deleteUnit(params);
+    return await _goodsRepository.editUnit(params);
   }
 }

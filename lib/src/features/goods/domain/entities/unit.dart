@@ -24,20 +24,32 @@ class Unit {
 
 class UnitParams {
   final String? id;
-  final String name;
-  final int quantity;
-  final String description;
-  final File image;
-  final int price;
+  final String? name;
+  final int? quantity;
+  final String? description;
+  final File? image;
+  final String? imageString;
+  final int? price;
   int? threshold;
 
-  UnitParams({
+  UnitParams(
+     {
+       this.imageString,
     this.id,
-    required this.name,
-    required this.quantity,
-    required this.description,
-    required this.image,
-    required this.price,
+    this.name,
+    this.quantity,
+    this.description,
+    this.image,
+    this.price,
     this.threshold,
   });
+
+  factory UnitParams.empty() => UnitParams(
+        id: '_empty.id',
+        name: "_empty.name",
+        price: 0,
+        image: File(''),
+        description: "_empty.description",
+        quantity: 0,
+      );
 }

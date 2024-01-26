@@ -22,7 +22,7 @@ class GoodsAppbar extends StatelessWidget {
             )),
         const Expanded(
           child: Text(
-            "goods",
+            "البضائع",
             style: TextStyle(
               color: AppColor.textColor,
               fontSize: 24,

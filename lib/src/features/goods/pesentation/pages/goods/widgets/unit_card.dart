@@ -84,18 +84,8 @@ class UnitCard extends StatelessWidget {
   }
 
   Widget _buildAttributes() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _getAttribute(Icons.numbers_outlined, AppColor.labelColor,
-            unit.quantity, unit.threshold),
-        const SizedBox(
-          width: 12,
-        ),
-        _getAttribute(Icons.monetization_on_outlined, AppColor.labelColor,
-            unit.price  , null),
-      ],
-    );
+    return _getAttribute(Icons.numbers_outlined, AppColor.labelColor,
+        unit.quantity, unit.threshold);
   }
 
   _getAttribute(IconData icon, Color color, int number, int? threshold) {

@@ -51,6 +51,7 @@ class ListOfUnits extends StatelessWidget {
                     context.read<GoodsCubit>().addTransactionMode = true;
                     context.read<GoodsCubit>().transactionType =
                         transactionType;
+
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -72,57 +73,55 @@ class ListOfUnits extends StatelessWidget {
   }
 
   _buildItem(int index, BuildContext context) {
-    return Stack(children: [
-      Container(
-        margin: const EdgeInsets.only(top: 10),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: AppColor.primary,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: AppColor.shadowColor.withOpacity(0.1),
-                spreadRadius: 1,
-                blurRadius: 1,
-                offset: const Offset(1, 1), // changes position of shadow
-              ),
-            ]),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            GestureDetector(
-                onTap: () {
-                  context
-                      .read<TransactionCubit>()
-                      .deleteIncomingUnitById(units[index].id);
-                },
-                child: Icon(Icons.delete_outline)),
-            SizedBox(width: 30, child: Text('${units[index].quantity}')),
-            SizedBox(
-              width: 30,
-              height: 30,
-              child: Text(
-                '${units[index].name}',overflow: TextOverflow.clip,
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: AppColor.primary,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: AppColor.shadowColor.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: const Offset(1, 1), // changes position of shadow
+            ),
+          ]),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          GestureDetector(
+              onTap: () {
+                context
+                    .read<TransactionCubit>()
+                    .deleteIncomingUnitById(units[index].id);
+              },
+              child: Icon(Icons.delete_outline)),
+          SizedBox(width: 30, child: Text('${units[index].quantity}')),
+          SizedBox(
+
+            child: Text(
+              '${units[index].name}',
+              overflow: TextOverflow.clip,
+            ),
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20.0),
+            child: Container(
+              width: 40,
+              height: 40,
+              child: CachedNetworkImage(
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                imageUrl: units[index].image,
+                fit: BoxFit.fill,
+                width: double.infinity,
               ),
             ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20.0),
-              child: Container(
-                width: 40,
-                height: 40,
-                child: CachedNetworkImage(
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                  imageUrl: units[index].image,
-                  fit: BoxFit.fill,
-                  width: double.infinity,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
-    ]);
+    );
   }
 }

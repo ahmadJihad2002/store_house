@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_house/core/utils/dummy_data.dart';
+import 'package:store_house/src/features/account/data/models/user_model.dart';
+import 'package:store_house/src/features/account/presentation/bloc/account_cubit.dart';
 import 'package:store_house/src/features/account/presentation/pages/account/widgets/account_appbar.dart';
 import 'package:store_house/src/features/account/presentation/pages/account/widgets/account_profile_block.dart';
 import 'package:store_house/src/features/account/presentation/pages/account/widgets/account_record_block.dart';
@@ -16,6 +19,10 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
+  UserModel user=UserModel.empty();
+
+
+
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -33,27 +40,29 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Widget _buildBody() {
+    user = context.watch<AccountCubit>().user!;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: [
-          AccountProfileBlock(profile: profile),
+          AccountProfileBlock(  image: user.image,name: user.name,),
           const SizedBox(
             height: 20,
           ),
           const AccountRecordBlock(),
-          const SizedBox(
-            height: 20,
-          ),
-          const AccountBlock1(),
-          const SizedBox(
-            height: 20,
-          ),
-          const AccountBlock2(),
-          const SizedBox(
-            height: 20,
-          ),
-          const AccountBlock3(),
+          // const SizedBox(
+          //   height: 20,
+          // ),
+          // const AccountBlock1(),
+          // const SizedBox(
+          //   height: 20,
+          // ),
+          // const AccountBlock2(),
+          // const SizedBox(
+          //   height: 20,
+          // ),
+          // const AccountBlock3(),
         ],
       ),
     );

@@ -1,28 +1,28 @@
-abstract class AppStates {}
+abstract class AddTypeStates {}
 
-class AppInitialStates extends AppStates {}
+class AppInitialStates extends AddTypeStates {}
 
-class AppBottomNavAppBarChangeStates extends AppStates {}
+class AppBottomNavAppBarChangeStates extends AddTypeStates {}
 
-class AppSelectImageState extends AppStates {}
+class AppSelectImageState extends AddTypeStates {}
 
-class AppAddTypeSuccessState extends AppStates {}
+class AppAddTypeSuccessState extends AddTypeStates {}
 
-class AppDateBeenSelectedState extends AppStates {}
+class AppDateBeenSelectedState extends AddTypeStates {}
 
-class AppChangeQuantityState extends AppStates {}
+class AppChangeQuantityState extends AddTypeStates {}
 
-class AppChangeQuantityErrorState extends AppStates {
+class AppChangeQuantityErrorState extends AddTypeStates {
   final String error;
 
   AppChangeQuantityErrorState(this.error);
 }
 
-class AppAddNewTypeSuccessState extends AppStates {}
+class AppAddNewTypeSuccessState extends AddTypeStates {}
 
-class AppAddNewTypeLoadingState extends AppStates {}
+class AppAddNewTypeLoadingState extends AddTypeStates {}
 
-class AppAddNewTypeErrorState extends AppStates {
+class AppAddNewTypeErrorState extends AddTypeStates {
   final String error;
 
   AppAddNewTypeErrorState(this.error);

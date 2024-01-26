@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_house/core/services/cache_helper.dart';
+import 'package:store_house/core/utils/app_constant.dart';
 import 'package:store_house/core/utils/app_util.dart';
-import 'package:store_house/src/features/auth/data/models/user_model.dart';
 import 'package:store_house/src/features/auth/domain/entities/user.dart';
 import 'package:store_house/src/features/auth/domain/usecases/login.dart';
 import 'package:store_house/src/features/auth/pesentation/bloc/login/states.dart';
@@ -34,8 +34,6 @@ class LoginCubit extends Cubit<LoginStates> {
     });
   }
 
-  late UserModel userModel;
-
   void login(
       {required String email,
       required String password,
@@ -47,9 +45,9 @@ class LoginCubit extends Cubit<LoginStates> {
         UserParams(name: name, image: image, email: email, password: password));
     result.fold((failure) => emit(AppLoginErrorStates(failure.errorMessage)),
         (r) async {
-      userModel = r;
-
-      await CacheHelper.saveData(key: 'token', value: userModel.id);
+      String userId = r;
+      AppConstant.token=r;
+      await CacheHelper.saveData(key: 'token', value: userId);
 
       emit(AppLoginSuccessStates());
     });

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_house/core/utils/app_util.dart';
 import 'package:store_house/src/features/auth/pesentation/bloc/login/login_cubit.dart';
 import 'package:store_house/src/features/auth/pesentation/bloc/login/states.dart';
-import 'package:store_house/src/features/goods/pesentation/pages/add_type/widgets/addTypeAppBar.dart';
+import 'package:store_house/src/features/auth/pesentation/pages/login/widgets/LoginAppBar.dart';
 import 'package:store_house/src/root_app.dart';
 import 'package:store_house/src/theme/app_color.dart';
 import 'package:store_house/src/widgets/custom_button.dart';
@@ -49,7 +49,7 @@ class LoginPage extends StatelessWidget {
               pinned: true,
               snap: true,
               floating: true,
-              title: AddTypeAppBar(),
+              title: LogInAppBar(),
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
@@ -75,34 +75,7 @@ class LoginPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              CustomTextBox(
-                controller: name,
-                hint: 'إسم',
-                validate: (value) {
-                  if (value!.isEmpty) {
-                    return "قم بإدخال الاسم بالأول";
-                  }
-                },
-              ),
-              CustomTextBox(
-                controller: email,
-                hint: 'عنوان البريد الإلكتروني',
-                validate: (value) {
-                  if (value!.isEmpty) {
-                    return "قم بإدخال الاسم بالأول";
-                  }
-                },
-              ),
-              CustomTextBox(
-                validate: (value) {
-                  if (value!.isEmpty) {
-                    return "قم بإدخال كلمة السر بالأول";
-                  }
-                },
-                keyboardType: TextInputType.visiblePassword,
-                hint: 'كلمة السر',
-                controller: password,
-              ),
+              _buildForms(),
               _buildPhoto(cubit),
               ConditionalBuilder(
                 condition: state is AppLoginLoadingStates,
@@ -112,12 +85,19 @@ class LoginPage extends StatelessWidget {
                     title: "تسجيل الدخول",
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                        cubit.login(
-                          name: name.text,
-                          image: cubit.image!,
-                          email: email.text,
-                          password: password.text,
-                        );
+                        if (cubit.image != null) {
+                          cubit.login(
+                            name: name.text,
+                            image: cubit.image!,
+                            email: email.text,
+                            password: password.text,
+                          );
+                        } else {
+                          AppUtil.showSnackbar(
+                              context: context,
+                              message: 'قم بإضافة صورة ',
+                              color: AppColor.warningMsgColor);
+                        }
                       }
                     }),
               ),
@@ -125,6 +105,43 @@ class LoginPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  _buildForms() {
+    return Column(
+      children: [
+        CustomTextBox(
+          controller: name,
+          hint: 'إسم',
+          validate: (value) {
+            if (value!.isEmpty) {
+              return "قم بإدخال الاسم بالأول";
+            }
+          },
+        ),
+        const SizedBox(height: 10),
+        CustomTextBox(
+          controller: email,
+          hint: 'عنوان البريد الإلكتروني',
+          validate: (value) {
+            if (value!.isEmpty) {
+              return "قم بإدخال الاسم بالأول";
+            }
+          },
+        ),
+        const SizedBox(height: 10),
+        CustomTextBox(
+          validate: (value) {
+            if (value!.isEmpty) {
+              return "قم بإدخال كلمة السر بالأول";
+            }
+          },
+          keyboardType: TextInputType.visiblePassword,
+          hint: 'كلمة السر',
+          controller: password,
+        ),
+      ],
     );
   }
 

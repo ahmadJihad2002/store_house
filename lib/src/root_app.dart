@@ -1,12 +1,13 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_house/core/utils/app_constant.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/root_cubit/root_app_cubit.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/root_cubit/root_app_states.dart';
-
 import 'package:store_house/src/features/goods/pesentation/pages/home/home.dart';
 import 'package:store_house/src/theme/app_color.dart';
 import 'package:store_house/src/widgets/bottombar_item.dart';
+import 'package:store_house/src/widgets/show_dialog.dart';
 
 import 'features/account/presentation/pages/account/account.dart';
 
@@ -24,8 +25,6 @@ class _RootAppState extends State<RootApp> with TickerProviderStateMixin {
       "active_icon": "assets/icons/home.svg",
       "page": HomePage(),
     },
-
-
     {
       "icon": "assets/icons/profile.svg",
       "active_icon": "assets/icons/profile.svg",
@@ -44,7 +43,7 @@ class _RootAppState extends State<RootApp> with TickerProviderStateMixin {
   );
 
   @override
-  void initState() {
+  void initState()   {
     super.initState();
     _controller.forward();
   }
@@ -78,10 +77,11 @@ class _RootAppState extends State<RootApp> with TickerProviderStateMixin {
         listener: (BuildContext context, RootAppStates state) {},
         builder: (context, state) {
           RootAppCubit cubit = RootAppCubit.get(context);
-          return Scaffold(
-            backgroundColor: AppColor.appBgColor,
-            bottomNavigationBar: _buildBottomBar(cubit),
-            body: _buildPage(cubit),
+          return  Scaffold(
+              backgroundColor: AppColor.appBgColor,
+              bottomNavigationBar: _buildBottomBar(cubit),
+              body: _buildPage(cubit),
+
           );
         });
   }

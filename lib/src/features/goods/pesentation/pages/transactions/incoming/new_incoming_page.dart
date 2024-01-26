@@ -1,6 +1,7 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:store_house/core/utils/app_util.dart';
 import 'package:store_house/src/features/goods/domain/entities/transaction.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/goods_cubit/goods_cubit.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/transaction_cubit/transaction_cuit.dart';
@@ -11,7 +12,6 @@ import 'package:store_house/src/widgets/custom_button.dart';
 import 'package:store_house/src/widgets/custom_progress_indicator.dart';
 import 'package:store_house/src/widgets/custom_textfield.dart';
 
-import '../../../../../../../core/services/util.dart';
 import 'widgets/new_incoming_appBar.dart';
 
 class NewIncomingPage extends StatelessWidget {
@@ -28,9 +28,10 @@ class NewIncomingPage extends StatelessWidget {
       if (state is AppAddIncomingGoodsSuccessState) {
         context.read<GoodsCubit>().getAllGoods();
         context.read<TransactionCubit>().getAllTransactions();
-
-        // Navigator.pop(context);
-        showToast(text: 'تم الضافة بنجاح', state: ToastStates.success);
+        AppUtil.showSnackbar(
+            context: context,
+            message: 'تم الضافة بنجاح',
+            color: AppColor.successMsgColor);
       }
     }, builder: (context, state) {
       return Scaffold(
@@ -92,8 +93,10 @@ class NewIncomingPage extends StatelessWidget {
               label: 'تعليق',
             ),
             const SizedBox(height: 30),
-            ListOfUnits(units: cubit.selectedUnits,transactionType: TransactionType.incoming,),
-
+            ListOfUnits(
+              units: cubit.selectedUnits,
+              transactionType: TransactionType.incoming,
+            ),
             const SizedBox(height: 30),
             ConditionalBuilder(
               condition: state is AppAddIncomingGoodsLoadingState,
@@ -101,9 +104,12 @@ class NewIncomingPage extends StatelessWidget {
               fallback: (context) => CustomButton(
                   radius: 10,
                   title: "إضافة",
+                  disableButton: context.watch<TransactionCubit>().selectedUnits.isEmpty,
                   onTap: () async {
                     context.read<GoodsCubit>().addTransactionMode = false;
 
+                    cubit.changeQuantityOfUnit(
+                        context, TransactionType.incoming);
 
                     await cubit.sendTransaction(
                       date: cubit.selectedDate.toString(),
@@ -112,10 +118,6 @@ class NewIncomingPage extends StatelessWidget {
                       timeStamp:
                           DateTime.now().millisecondsSinceEpoch.toString(),
                     );
-                    print('done sending ');
-
-                    cubit.changeQuantityOfUnit(context);
-                    print('done sending 2');
                   }),
             ),
           ],

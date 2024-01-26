@@ -44,14 +44,12 @@ class HomeItem extends StatelessWidget {
           // ],
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             SvgPicture.asset(
               icon,
-              // colorFilter:
-              // ColorFilter.mode(isActive ? activeColor : color, BlendMode.srcIn),
               width: 100,
-              height: 150,
+              height: 140,
             ),
             Text(
               '${goodsNumber ?? ''}',

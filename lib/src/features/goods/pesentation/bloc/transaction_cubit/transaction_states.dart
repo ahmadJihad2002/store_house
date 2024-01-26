@@ -33,7 +33,7 @@ class DeleteTransactionsErrorStates extends TransactionStates {
   DeleteTransactionsErrorStates(this.error);
 }
 
-class AppUnitAddedToIncomingState extends TransactionStates {}
+class AppUnitAddedToTransactionsState extends TransactionStates {}
 
 class AppDeleteIncomingUnitState extends TransactionStates {}
 

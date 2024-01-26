@@ -12,13 +12,11 @@ class IncomingTransactions extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child:Column(
-        children: context.read<TransactionCubit>().transactions
+        children: context.watch<TransactionCubit>().transactions
             .where((e) => e.transactionType == TransactionType.incoming)
             .map((e) => TransactionCard(
-          date: e.date,
-          transactionType: e.transactionType,
-          description: e.description,
-          units: e.units,
+          doc: e,
+
         ))
             .toList(),
       )

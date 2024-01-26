@@ -26,7 +26,7 @@ class AddNewType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppCubit cubit = AppCubit.get(context);
-    return BlocConsumer<AppCubit, AppStates>(listener: (context, state) {
+    return BlocConsumer<AppCubit, AddTypeStates>(listener: (context, state) {
       if (state is AppChangeQuantityErrorState) {
         AppUtil.showSnackbar(
           context: context,
@@ -44,6 +44,8 @@ class AddNewType extends StatelessWidget {
             message: 'تم الاضافة بنجاح',
             color: AppColor.blue);
         context.read<GoodsCubit>().getAllGoods();
+        cubit.image = null;
+        cubit.quantity=0;
         Navigator.pop(context);
       }
     }, builder: (context, state) {
@@ -79,7 +81,7 @@ class AddNewType extends StatelessWidget {
     });
   }
 
-  _buildBody(AppCubit cubit, BuildContext context, AppStates state) {
+  _buildBody(AppCubit cubit, BuildContext context, AddTypeStates state) {
     TextEditingController dateController =
         TextEditingController(text: cubit.selectedDate);
     return Form(
@@ -132,7 +134,7 @@ class AddNewType extends StatelessWidget {
     );
   }
 
-  _buildButton(AppCubit cubit, AppStates state) {
+  _buildButton(AppCubit cubit, AddTypeStates state) {
     return ConditionalBuilder(
       condition: state is AppAddNewTypeLoadingState,
       builder: (context) => const CustomProgressIndicator(),

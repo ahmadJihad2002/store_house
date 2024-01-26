@@ -10,13 +10,11 @@ class AllTransactions extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-          children: context.read<TransactionCubit>().transactions.map(
+          children: context.watch<TransactionCubit>().transactions.map(
         (e) {
           return TransactionCard(
-              date: e.date,
-              transactionType: e.transactionType,
-              description: e.description,
-          units: e.units,);
+            doc: e,
+          );
         },
       ).toList()),
     );

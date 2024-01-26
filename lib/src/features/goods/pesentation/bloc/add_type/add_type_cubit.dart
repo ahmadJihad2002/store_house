@@ -9,7 +9,7 @@ import 'package:store_house/src/features/goods/domain/repositories/goods_reposit
 import 'package:store_house/src/features/goods/domain/usecases/add_new_unit.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/add_type/add_type_states.dart';
 
-class AppCubit extends Cubit<AppStates> {
+class AppCubit extends Cubit<AddTypeStates> {
   AppCubit() : super(AppInitialStates());
   GoodsRepository goodsRepository = GoodsRepositoriesImp();
   AddNewUnitUseCase addNewUnitUseCase = AddNewUnitUseCase();

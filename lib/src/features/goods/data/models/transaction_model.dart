@@ -47,7 +47,7 @@ class TransactionModel extends Transaction {
     switch (value) {
       case 'TransactionType.incoming':
         return TransactionType.incoming;
-      case 'TransactionType.outgoing':
+      case 'TransactionType.outGoing':
         return TransactionType.outGoing;
       // Handle other enum values if needed
       default:

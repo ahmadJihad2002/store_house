@@ -5,11 +5,10 @@ import 'package:store_house/src/features/goods/data/repositories/goods_repositor
 import 'package:store_house/src/features/goods/domain/repositories/goods_repository.dart';
 
 class GetAllGoodsUseCase extends UseCaseWithoutParams<List<UnitModel>> {
-
   final GoodsRepository _goodsRepository = GoodsRepositoriesImp();
 
   @override
   ResultFuture<List<UnitModel>> call() async {
-    return  await _goodsRepository.getAllGoods();
+    return await _goodsRepository.getAllGoods();
   }
 }

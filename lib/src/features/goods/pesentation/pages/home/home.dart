@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
 
   final List homeItems = [
-    {"icon": "assets/icons/goods.svg", "page": GoodsPage()},
+    {"icon": "assets/icons/goods.svg", "page": const GoodsPage()},
     {"icon": "assets/icons/docs.svg", "page": Docs()},
     {"icon": "assets/icons/outgoing.svg", "page": NewOutgoingPage()},
     {"icon": "assets/icons/incoming.svg", "page": NewIncomingPage()},
@@ -51,7 +51,7 @@ class HomePage extends StatelessWidget {
         // Set the grid layout. You can use `GridView.count` or `GridView.extent`.
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, // Number of columns in the grid.
-          crossAxisSpacing: 8.0, // Spacing between columns.
+          crossAxisSpacing:8.0, // Spacing between columns.
           mainAxisSpacing: 8.0, // Spacing between rows.
         ),
         children: List.generate(

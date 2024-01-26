@@ -1,8 +1,8 @@
-import 'package:dartz/dartz.dart';
+import 'dart:io';
 
+import 'package:dartz/dartz.dart';
 import 'package:store_house/core/errors/exception.dart';
 import 'package:store_house/core/errors/failure.dart';
-
 import 'package:store_house/core/utils/typedef.dart';
 import 'package:store_house/src/features/goods/data/data_sources/goods_data_Source.dart';
 import 'package:store_house/src/features/goods/data/models/transaction_model.dart';
@@ -28,7 +28,7 @@ class GoodsRepositoriesImp extends GoodsRepository {
   }
 
   @override
-  ResultFuture deleteUnit(UnitParams params) async {
+  ResultFuture deleteUnit(UnitParams params, {File? oldImage}) async {
     try {
       final result = await _goodsRemoteDataSource.deleteUnit(params);
       return Right(result);
@@ -40,7 +40,7 @@ class GoodsRepositoriesImp extends GoodsRepository {
   }
 
   @override
-  ResultFuture editUnit(UnitParams params) async {
+  ResultFuture editUnit(UnitParams params, {File? oldImage}) async {
     try {
       final result = await _goodsRemoteDataSource.editUnit(params);
       return Right(result);
@@ -52,7 +52,7 @@ class GoodsRepositoriesImp extends GoodsRepository {
   }
 
   @override
-  ResultFuture<List<UnitModel>> getAllGoods() async {
+  ResultFuture<List<UnitModel>>getAllGoods() async {
     try {
       final result = await _goodsRemoteDataSource.getAllGoods();
       return Right(result);
@@ -95,6 +95,20 @@ class GoodsRepositoriesImp extends GoodsRepository {
   ResultFuture<List<TransactionModel>> getAllTransactions() async {
     try {
       final result = await _goodsRemoteDataSource.getAllTransactions();
+      return Right(result);
+    } on ServerException {
+      return left(
+        const ServerFailure(
+            message: 'failed to connect to server', statusCode: 400),
+      );
+    }
+  }
+
+  @override
+  ResultFuture deleteTransactionDoc(String transactionId) async {
+    try {
+      final result =
+          await _goodsRemoteDataSource.deleteTransactionDoc(transactionId);
       return Right(result);
     } on ServerException {
       return left(
