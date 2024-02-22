@@ -28,6 +28,7 @@ class NewIncomingPage extends StatelessWidget {
       if (state is AppAddIncomingGoodsSuccessState) {
         context.read<GoodsCubit>().getAllGoods();
         context.read<TransactionCubit>().getAllTransactions();
+        Navigator.pop(context);
         AppUtil.showSnackbar(
             context: context,
             message: 'تم الضافة بنجاح',
@@ -117,7 +118,8 @@ class NewIncomingPage extends StatelessWidget {
                       transactionType: TransactionType.incoming,
                       timeStamp:
                           DateTime.now().millisecondsSinceEpoch.toString(),
-                    );
+                    )
+                    ;
                   }),
             ),
           ],

@@ -15,6 +15,7 @@ class AppCubit extends Cubit<AddTypeStates> {
   AddNewUnitUseCase addNewUnitUseCase = AddNewUnitUseCase();
 
   static AppCubit get(context) => BlocProvider.of(context);
+  bool disableButton = false;
 
   File? image;
 

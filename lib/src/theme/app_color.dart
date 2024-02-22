@@ -10,9 +10,9 @@ class AppColor {
   static const selectColor = Color(0xFF90BAE5);
   static const quantityColor = Color(0xFF626161);
 
-  static const errorMsgColor = Color(0xFEEF0808);
-  static const successMsgColor = Color(0xFF35EAEA);
-  static const warningMsgColor = Color(0xFFECEC6C);
+  static const errorMsgColor = Color(0xFEEA7C7C);
+  static const successMsgColor = Color(0xFF78E161);
+  static const warningMsgColor = Color(0xFF63B99F);
 
   static const darker = Color(0xFF3E4249);
   static const cardColor = Colors.white;

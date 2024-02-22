@@ -1,5 +1,7 @@
 name: store_house
-description: A new Flutter project.
+description: مستودع امريش
+
+
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -20,6 +22,8 @@ version: 1.0.0+1
 
 environment:
   sdk: '>=3.0.6 <4.0.0'
+
+
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -58,6 +62,8 @@ dependencies:
   uuid: ^4.2.1
   connectivity_plus: ^5.0.2
   internet_connection_checker: ^1.0.0+1
+
+
 
 
 

@@ -21,6 +21,8 @@ class AppUtil {
       required String message,
       Color color = AppColor.appBgColor}) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      padding:EdgeInsets.all(10),
+
       content: Text(message),
       backgroundColor: color,
     ));

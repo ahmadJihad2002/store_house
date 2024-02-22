@@ -70,12 +70,6 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
           .collection('goods')
           .doc(unitID)
           .update({'quantity': newQuantity});
-      // await FirebaseFirestore.instance
-      //     .collection('storehouses')
-      //     .doc('xscmkmdvoacsmas')
-      //     .collection('goods')
-      //     .doc(unitID)
-      //     .update({'quantity': newQuantity});
     } catch (error) {
       throw FirebaseException(plugin: error.toString());
     }
@@ -86,13 +80,6 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
     try {
       String id = databaseRef.collection('goods').doc().id;
 
-      // String id = fireStore
-      //     .collection('storehouses')
-      //     // .doc(auth.currentUser!.uid)
-      //     .doc('xscmkmdvoacsmas')
-      //     .collection('goods')
-      //     .doc()
-      //     .id;
 
       UnitModel unit = UnitModel(
           id: id,
@@ -107,14 +94,7 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
           image: params.image!, imageName: getImageNameFromPath(params.image!));
 
       await databaseRef.collection('goods').doc(id).set(unit.toJson());
-      //
-      // await fireStore
-      //     .collection('storehouses')
-      //     // .doc(auth.currentUser!.uid)
-      //     .doc('xscmkmdvoacsmas')
-      //     .collection('goods')
-      //     .doc(id)
-      //     .set(unit.toJson());
+
     } catch (error) {
       throw FirebaseException(plugin: error.toString());
     }
@@ -150,13 +130,6 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
           .doc(params.id)
           .update(unit.toJson());
 
-      // await fireStore
-      //          .collection('storehouses')
-      //          // .doc(auth.currentUser!.uid)
-      //          .doc('xscmkmdvoacsmas')
-      //          .collection('goods')
-      //          .doc(params.id)
-      //          .update(unit.toJson());
     } catch (error) {
       throw FirebaseException(plugin: error.toString());
     }
@@ -165,27 +138,16 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
   @override
   Future deleteUnit(UnitParams params) async {
     try {
-      deleteImage(imageName: await getCurrentImageOfUnit(params.id!));
 
+      await deleteImage(imageName: await getCurrentImageOfUnit(params.id!));
       await databaseRef.collection('goods').doc(params.id!).delete();
-      // await fireStore
-      //     .collection('storehouses')
-      //     // .doc(auth.currentUser!.uid)
-      //     .doc('xscmkmdvoacsmas')
-      //     .collection('goods')
-      //     .doc(params.id!)
-      //     .delete();
+
     } catch (error) {
       throw FirebaseException(plugin: error.toString());
     }
   }
 
   uploadImage({required File image, required String imageName}) async {
-    // Reference storageReference = FirebaseStorage.instance
-    //     .ref()
-    //     .child('pictures')
-    //     .child(AppConstant.token);
-    // UploadTask uploadTask = storageReference.putFile(image);
     UploadTask uploadTask = storageRef.child(imageName).putFile(image);
     print('csd');
     await uploadTask.whenComplete(() {
@@ -194,10 +156,8 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
   }
 
   deleteImage({required String imageName}) async {
-    storageRef.child(imageName).delete();
-    // Reference storageReference =
-    //     FirebaseStorage.instance.ref().child('pictures/$imageName');
-    // storageReference.delete();
+   await storageRef.child(imageName).delete();
+
   }
 
   String getImageNameFromPath(File file) {
@@ -212,13 +172,6 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
       DocumentSnapshot docSnapshot =
           await databaseRef.collection('goods').doc(id).get();
 
-      // await fireStore
-      //     .collection('storehouses')
-      //     // .doc(auth.currentUser!.uid)
-      //     .doc('xscmkmdvoacsmas')
-      //     .collection('goods')
-      //     .doc(id)
-      //     .get();
       if (docSnapshot.exists) {
         return docSnapshot.get('image');
       } else {

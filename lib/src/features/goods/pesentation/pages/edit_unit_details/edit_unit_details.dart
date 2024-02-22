@@ -11,8 +11,7 @@ import 'package:store_house/src/features/goods/pesentation/bloc/edit_cubit/edit_
 import 'package:store_house/src/features/goods/pesentation/bloc/goods_cubit/goods_cubit.dart';
 import 'package:store_house/src/features/goods/pesentation/pages/edit_unit_details/widgets/unit_details_appBar.dart';
 import 'package:store_house/src/theme/app_color.dart';
-import 'package:store_house/src/widgets/build_svg_icon.dart';
-import 'package:store_house/src/widgets/custom_button.dart';
+ import 'package:store_house/src/widgets/custom_button.dart';
 import 'package:store_house/src/widgets/custom_progress_indicator.dart';
 import 'package:store_house/src/widgets/custom_textfield.dart';
 import 'package:store_house/src/widgets/show_dialog.dart';
@@ -58,7 +57,7 @@ class _EditUnitState extends State<EditUnit> {
         listener: (context, state) {
       if (state is EditChangeQuantityErrorState) {
         AppUtil.showSnackbar(
-            context: context, message: 'العدد اقل من 0', color: AppColor.red);
+            context: context, message: 'العدد اقل من 0', color: AppColor.errorMsgColor);
       }
 
       if (state is EditUnitSuccessState) {

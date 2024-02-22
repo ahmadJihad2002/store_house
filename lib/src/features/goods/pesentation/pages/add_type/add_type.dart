@@ -31,22 +31,30 @@ class AddNewType extends StatelessWidget {
         AppUtil.showSnackbar(
           context: context,
           message: 'العدد اقل من 0',
-          color: AppColor.orange,
+          color: AppColor.errorMsgColor,
         );
       }
       if (state is AppAddNewTypeErrorState) {
         AppUtil.showSnackbar(
-            context: context, message: state.error, color: AppColor.red);
+            context: context,
+            message: state.error,
+            color: AppColor.errorMsgColor);
       }
       if (state is AppAddNewTypeSuccessState) {
         AppUtil.showSnackbar(
             context: context,
             message: 'تم الاضافة بنجاح',
-            color: AppColor.blue);
+            color: AppColor.successMsgColor);
+
         context.read<GoodsCubit>().getAllGoods();
         cubit.image = null;
-        cubit.quantity=0;
+        cubit.quantity = 0;
         Navigator.pop(context);
+      }
+      if (state is AppAddNewTypeLoadingState) {
+        context.watch<AppCubit>().disableButton = true;
+      } else {
+        context.watch<AppCubit>().disableButton = false;
       }
     }, builder: (context, state) {
       return Scaffold(
@@ -139,6 +147,7 @@ class AddNewType extends StatelessWidget {
       condition: state is AppAddNewTypeLoadingState,
       builder: (context) => const CustomProgressIndicator(),
       fallback: (context) => CustomButton(
+          disableButton: cubit.disableButton,
           radius: 10,
           title: "إضافة",
           onTap: () {
@@ -160,6 +169,8 @@ class AddNewType extends StatelessWidget {
                     color: AppColor.warningMsgColor);
               }
             }
+
+            cubit.disableButton = true;
           }),
     );
   }
