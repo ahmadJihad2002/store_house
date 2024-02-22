@@ -59,8 +59,8 @@ class _TransactionCardState extends State<TransactionCard> {
                         style: const TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w800)),
                     Text(widget.doc.transactionType == TransactionType.incoming
-                        ? 'صادر'
-                        : 'وارد'),
+                        ? 'وارد'
+                        : 'صادر'),
                   ],
                 ),
                 Text(widget.doc.date),
