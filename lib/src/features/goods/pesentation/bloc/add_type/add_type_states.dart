@@ -4,6 +4,8 @@ class AppInitialStates extends AddTypeStates {}
 
 class AppBottomNavAppBarChangeStates extends AddTypeStates {}
 
+class ChangeButtonState extends AddTypeStates {}
+
 class AppSelectImageState extends AddTypeStates {}
 
 class AppAddTypeSuccessState extends AddTypeStates {}

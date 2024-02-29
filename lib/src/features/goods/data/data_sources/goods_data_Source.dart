@@ -27,7 +27,7 @@ abstract class GoodsRemoteDataSource {
 }
 
 class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
-  // final FirebaseFirestore fireStore = FirebaseFirestore.instance;
+
 
   final databaseRef = FirebaseFirestore.instance
       .collection('users')
@@ -70,6 +70,8 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
           .collection('goods')
           .doc(unitID)
           .update({'quantity': newQuantity});
+
+
     } catch (error) {
       throw FirebaseException(plugin: error.toString());
     }
@@ -187,13 +189,6 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
     try {
       String id = databaseRef.collection('docs').doc().id;
 
-      // fireStore
-      // .collection('storehouses')
-      // // .doc(auth.currentUser!.uid)
-      // .doc('xscmkmdvoacsmas')
-      // .collection('docs')
-      // .doc()
-      // .id;
 
       TransactionModel transaction = TransactionModel(
           id: id,
@@ -204,13 +199,7 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
           timeStamp: params.timeStamp);
 
       await databaseRef.collection('docs').doc(id).set(transaction.toJson());
-      // await fireStore
-      //     .collection('storehouses')
-      //     // .doc(auth.currentUser!.uid)
-      //     .doc('xscmkmdvoacsmas')
-      //     .collection('docs')
-      //     .doc(id)
-      //     .set(transaction.toJson());
+
     } catch (error, trace) {
       print(trace.toString());
       print(error.toString());
@@ -224,13 +213,6 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
       List<TransactionModel> transactions = [];
 
       final querySnapshot = await databaseRef.collection('docs').get();
-
-      // final querySnapshot = await FirebaseFirestore.instance
-      //     .collection('storehouses')
-      //     // .doc(auth.currentUser!.uid)
-      //     .doc('xscmkmdvoacsmas')
-      //     .collection('docs')
-      //     .get();
 
       querySnapshot.docs.forEach((element) async {
         print(element.data());

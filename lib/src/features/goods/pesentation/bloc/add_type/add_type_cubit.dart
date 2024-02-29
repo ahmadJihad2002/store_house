@@ -16,7 +16,12 @@ class AppCubit extends Cubit<AddTypeStates> {
 
   static AppCubit get(context) => BlocProvider.of(context);
   bool disableButton = false;
+  void changeButton(bool value){
+    disableButton=value;
+    emit(ChangeButtonState());
 
+
+  }
   File? image;
 
   void uploadImage() async {

@@ -52,9 +52,10 @@ class AddNewType extends StatelessWidget {
         Navigator.pop(context);
       }
       if (state is AppAddNewTypeLoadingState) {
-        context.watch<AppCubit>().disableButton = true;
+
+        context.read<AppCubit>().disableButton = true;
       } else {
-        context.watch<AppCubit>().disableButton = false;
+        context.read<AppCubit>().disableButton = false;
       }
     }, builder: (context, state) {
       return Scaffold(
@@ -135,19 +136,21 @@ class AddNewType extends StatelessWidget {
             const SizedBox(height: 30),
             _buildQuantity(cubit),
             const SizedBox(height: 30),
-            _buildButton(cubit, state)
+            _buildButton(cubit, state,context)
           ],
         ),
       ),
     );
   }
 
-  _buildButton(AppCubit cubit, AddTypeStates state) {
+  _buildButton(AppCubit cubit, AddTypeStates state,BuildContext context) {
     return ConditionalBuilder(
       condition: state is AppAddNewTypeLoadingState,
       builder: (context) => const CustomProgressIndicator(),
       fallback: (context) => CustomButton(
-          disableButton: cubit.disableButton,
+
+
+          disableButton:  context.watch<AppCubit>().disableButton ,
           radius: 10,
           title: "إضافة",
           onTap: () {
