@@ -9,7 +9,7 @@ import 'package:store_house/src/features/goods/domain/entities/transaction.dart'
 import 'package:store_house/src/features/goods/domain/entities/unit.dart';
 
 abstract class GoodsRemoteDataSource {
-  Future< List<UnitModel>> getAllGoods();
+  Future<List<UnitModel>> getAllGoods();
 
   Future<List<TransactionModel>> getAllTransactions();
 
@@ -27,8 +27,6 @@ abstract class GoodsRemoteDataSource {
 }
 
 class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
-
-
   final databaseRef = FirebaseFirestore.instance
       .collection('users')
       .doc(AppConstant.token)
@@ -45,12 +43,13 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
 
       final querySnapshot = await databaseRef.collection('goods').get();
 
-      for (var element in querySnapshot.docs)   {
+      for (var element in querySnapshot.docs) {
         print(element.data());
 
         // Get the image URL from the image name
         Map<String, dynamic> data = element.data();
-        data['image'] = await storageRef.child('${element['image']}').getDownloadURL();
+        data['image'] =
+            await storageRef.child('${element['image']}').getDownloadURL();
 
         UnitModel unit = UnitModel.fromJson(data, element.id);
         goods.add(unit);
@@ -70,8 +69,6 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
           .collection('goods')
           .doc(unitID)
           .update({'quantity': newQuantity});
-
-
     } catch (error) {
       throw FirebaseException(plugin: error.toString());
     }
@@ -81,7 +78,6 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
   Future addNewType(UnitParams params) async {
     try {
       String id = databaseRef.collection('goods').doc().id;
-
 
       UnitModel unit = UnitModel(
           id: id,
@@ -96,7 +92,6 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
           image: params.image!, imageName: getImageNameFromPath(params.image!));
 
       await databaseRef.collection('goods').doc(id).set(unit.toJson());
-
     } catch (error) {
       throw FirebaseException(plugin: error.toString());
     }
@@ -131,7 +126,6 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
           .collection('goods')
           .doc(params.id)
           .update(unit.toJson());
-
     } catch (error) {
       throw FirebaseException(plugin: error.toString());
     }
@@ -140,17 +134,16 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
   @override
   Future deleteUnit(UnitParams params) async {
     try {
-
       await deleteImage(imageName: await getCurrentImageOfUnit(params.id!));
       await databaseRef.collection('goods').doc(params.id!).delete();
-
     } catch (error) {
       throw FirebaseException(plugin: error.toString());
     }
   }
 
-  uploadImage({required File image, required String imageName}) async {
-    UploadTask uploadTask = storageRef.child(imageName).putFile(image);
+  Future<void> uploadImage(
+      {required File image, required String imageName}) async {
+    UploadTask uploadTask =  storageRef.child(imageName).putFile(image);
     print('csd');
     await uploadTask.whenComplete(() {
       print('Image uploaded');
@@ -158,8 +151,7 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
   }
 
   deleteImage({required String imageName}) async {
-   await storageRef.child(imageName).delete();
-
+    await storageRef.child(imageName).delete();
   }
 
   String getImageNameFromPath(File file) {
@@ -189,7 +181,6 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
     try {
       String id = databaseRef.collection('docs').doc().id;
 
-
       TransactionModel transaction = TransactionModel(
           id: id,
           units: params.units,
@@ -199,7 +190,6 @@ class GoodsRemoteDataSourceImp implements GoodsRemoteDataSource {
           timeStamp: params.timeStamp);
 
       await databaseRef.collection('docs').doc(id).set(transaction.toJson());
-
     } catch (error, trace) {
       print(trace.toString());
       print(error.toString());

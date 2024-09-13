@@ -56,16 +56,22 @@ class _TransactionCardState extends State<TransactionCard> {
                         widget.doc.description.isEmpty
                             ? 'لا يوجد'
                             : widget.doc.description,
-                        style: const TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.w800)),
-                    Text(widget.doc.transactionType == TransactionType.incoming
+
+                         style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+
+
+                        )),
+                     Text(widget.doc.transactionType == TransactionType.incoming
                         ? 'وارد'
                         : 'صادر'),
                   ],
+
                 ),
                 Text(widget.doc.date),
                 Wrap(
-                      children: widget.doc.units
+                    children: widget.doc.units
                         .map(
                           (e) => Row(
                             children: [
@@ -76,8 +82,7 @@ class _TransactionCardState extends State<TransactionCard> {
                               Text(
                                 "${e.name} : ${e.quantity}",
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 10),
+                                    fontWeight: FontWeight.w300, fontSize: 10),
                               ),
                             ],
                           ),
