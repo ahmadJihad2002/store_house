@@ -8,15 +8,14 @@ class AllTransactions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-          children: context.watch<TransactionCubit>().transactions.map(
-        (e) {
-          return TransactionCard(
-            doc: e,
-          );
-        },
-      ).toList()),
+    final transactions = context.watch<TransactionCubit>().transactions;
+
+    return ListView.builder(
+      itemCount: transactions.length,
+      itemBuilder: (context, index) {
+        final e = transactions[index];
+        return TransactionCard(doc: e);
+      },
     );
   }
 }
