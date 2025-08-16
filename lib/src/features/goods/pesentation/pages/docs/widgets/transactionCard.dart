@@ -52,20 +52,27 @@ class _TransactionCardState extends State<TransactionCard> {
                   textDirection: TextDirection.rtl,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                        widget.doc.description.isEmpty
-                            ? 'لا يوجد'
-                            : widget.doc.description,
+                    Flexible(
+                      child: Text(
+                          textDirection: TextDirection.rtl,
+                          widget.doc.description.isEmpty
+                              ? 'لا يوجد'
+                              : widget.doc.description,
 
-                         style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-
-
-                        )),
-                     Text(widget.doc.transactionType == TransactionType.incoming
-                        ? 'وارد'
-                        : 'صادر'),
+                           style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                          ),
+                      overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                     Padding(
+                       padding:const EdgeInsets.only(right: 10) ,
+                       child: Text(widget.doc.transactionType == TransactionType.incoming
+                          ? 'وارد'
+                          : 'صادر'),
+                     ),
                   ],
 
                 ),
