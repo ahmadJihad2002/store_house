@@ -67,7 +67,6 @@ Future<String> _exportToExcel(TransactionModel transaction) async {
     'Date',
     'Type',
     'Description',
-    'Timestamp',
     'Item Name',
     'Item Description',
     'Price',
@@ -78,10 +77,9 @@ Future<String> _exportToExcel(TransactionModel transaction) async {
   for (final unit in transaction.units) {
     sheet.appendRow([
       transaction.id,
-      transaction.date,
+      transaction.timestampToFormattedDate(transaction.timeStamp),
       transaction.transactionType.name.toString(),
       transaction.description,
-      transaction.timestampToFormattedDate(transaction.timeStamp),
       unit.name,
       unit.description,
       unit.price,
