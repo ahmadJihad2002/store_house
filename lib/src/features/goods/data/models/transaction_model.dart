@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
 import 'package:store_house/src/features/goods/data/models/unit_model.dart';
 import 'package:store_house/src/features/goods/domain/entities/transaction.dart';
 
@@ -53,5 +54,10 @@ class TransactionModel extends Transaction {
       default:
         return TransactionType.incoming; // Default value
     }
+  }
+
+  String timestampToFormattedDate(var t) {
+   DateTime date = DateTime.fromMillisecondsSinceEpoch(int.parse(t));
+   return DateFormat('yyyy-MM-dd HH:mm:ss').format(date);
   }
 }

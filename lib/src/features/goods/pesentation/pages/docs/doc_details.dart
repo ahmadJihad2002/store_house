@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:store_house/core/utils/excel_writer.dart';
 import 'package:store_house/src/features/goods/data/models/transaction_model.dart';
 import 'package:store_house/src/features/goods/data/models/unit_model.dart';
 import 'package:store_house/src/features/goods/pesentation/bloc/transaction_cubit/transaction_cuit.dart';
@@ -68,8 +69,34 @@ class DocsDetails extends StatelessWidget {
               const SizedBox(height: 10),
               _buildDocUnits(doc.units, context),
               const SizedBox(height: 10),
-              CustomButton(
-                  title: 'حذف', onTap: () => cubit.deleteTransactionDoc(doc.id))
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CustomButton(
+                    width: 100,
+                    title: 'حذف',
+                    onTap: () => cubit.deleteTransactionDoc(doc.id),
+                  ),
+                  CustomButton(
+                    width: 200,
+                    title: 'Export to Excel',
+                    onTap: () async {
+                      try {
+                        // Replace with your actual transaction list
+                        await exportToExcel(transaction: doc, context: context);
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text('Export failed: ${e.toString()}')),
+                        );
+                      }
+                    },
+                    icon: Icons.file_download,
+                    bgColor: AppColor.white,
+                    textColor: AppColor.blue,
+                  ),
+                ],
+              )
             ],
           ),
         ),
@@ -123,7 +150,6 @@ class DocsDetails extends StatelessWidget {
         children: [
           SizedBox(width: 30, child: Text('$quantity')),
           SizedBox(
-
             child: Text(
               '$name',
               overflow: TextOverflow.clip,
